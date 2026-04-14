@@ -80,8 +80,8 @@ export function RegisterEmployeeForm({ onSuccess }: RegisterEmployeeFormProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" disabled={isLoading}>
-          Cadastrar Funcionário
+        <Button disabled={isLoading}>
+          Adicionar
         </Button>
       </DialogTrigger>
       <DialogContent>

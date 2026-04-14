@@ -33,7 +33,7 @@ export function VersionSwitcher({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-linear-to-br from-amber-400 to-amber-600 text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-600 text-sidebar-primary-foreground">
                 <Home className="size-4" />
               </div>
               <div className="flex flex-col gap-0.5 leading-none">

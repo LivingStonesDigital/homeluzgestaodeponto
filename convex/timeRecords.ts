@@ -3,21 +3,29 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
+type TimeRecordType = "work_start" | "lunch_start" | "lunch_end" | "work_end";
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function todayString(): string {
-  return new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getTypeLabel(type: TimeRecordType): string {
+  const labels: Record<TimeRecordType, string> = {
+    work_start: "Entrada",
+    lunch_start: "Início do intervalo",
+    lunch_end: "Retorno do intervalo",
+    work_end: "Saída",
+  };
+  return labels[type];
 }
 
 async function requireUser(ctx: any) {
   const authId = await getAuthUserId(ctx);
   if (!authId) throw new Error("Não autenticado.");
 
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_token", (q: any) => q.eq("tokenIdentifier", authId))
-    .unique();
-
+  const user = await ctx.db.get(authId);
   if (!user || !user.isActive) throw new Error("Usuário não encontrado ou inativo.");
   return user;
 }
@@ -28,74 +36,187 @@ async function requireAdmin(ctx: any) {
   return user;
 }
 
+function getNextType(currentTypes: TimeRecordType[]): TimeRecordType {
+  if (!currentTypes.includes("work_start")) return "work_start";
+  if (!currentTypes.includes("lunch_start")) return "lunch_start";
+  if (!currentTypes.includes("lunch_end")) return "lunch_end";
+  if (!currentTypes.includes("work_end")) return "work_end";
+  return "work_end";
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MUTATIONS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-// ─── clockIn ──────────────────────────────────────────────────────────────────
-export const clockIn = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const user = await requireUser(ctx);
+// ─── registerTime ─────────────────────────────────────────────────────────────
+export const registerTime = mutation({
+  args: {
+    type: v.union(
+      v.literal("work_start"),
+      v.literal("lunch_start"),
+      v.literal("lunch_end"),
+      v.literal("work_end")
+    ),
+    timestamp: v.optional(v.number()),
+    userId: v.optional(v.id("users")),
+  },
+  handler: async (ctx, { type, timestamp, userId }) => {
+    const currentUser = await requireUser(ctx);
     const today = todayString();
+    const time = timestamp || Date.now();
 
-    // Impede dupla entrada no mesmo dia
-    const existing = await ctx.db
+    // If userId is provided, admin is registering for another user
+    let targetUser = currentUser;
+    if (userId) {
+      const admin = await requireAdmin(ctx);
+      targetUser = await ctx.db.get(userId);
+      if (!targetUser) throw new Error("Funcionário não encontrado.");
+    }
+
+    // Get all records for today
+    const todayRecords = await ctx.db
       .query("timeRecords")
       .withIndex("by_user_and_date", (q) =>
-        q.eq("userId", user._id).eq("date", today)
+        q.eq("userId", targetUser._id).eq("date", today)
       )
-      .filter((q) => q.eq(q.field("type"), "entry"))
-      .first();
+      .collect();
 
-    if (existing) throw new Error("Entrada já registrada hoje.");
+    const currentTypes = todayRecords.map((r) => r.type as TimeRecordType);
+
+    // Validate the sequence
+    const expectedType = getNextType(currentTypes);
+    if (type !== expectedType) {
+      throw new Error(`Você deve registrar: ${getTypeLabel(expectedType)}`);
+    }
+
+    // Check if this specific type already exists
+    if (currentTypes.includes(type)) {
+      throw new Error(`${getTypeLabel(type)} já registrado hoje.`);
+    }
 
     return await ctx.db.insert("timeRecords", {
-      userId: user._id,
-      type: "entry",
-      timestamp: Date.now(),
+      userId: targetUser._id,
+      type,
+      timestamp: time,
       date: today,
       status: "pending",
     });
   },
 });
 
-// ─── clockOut ─────────────────────────────────────────────────────────────────
-export const clockOut = mutation({
+// ─── editTimeRecord ────────────────────────────────────────────────────────────
+export const editTimeRecord = mutation({
+  args: {
+    recordId: v.id("timeRecords"),
+    newTimestamp: v.number(),
+    note: v.optional(v.string()),
+  },
+  handler: async (ctx, { recordId, newTimestamp, note }) => {
+    const user = await requireUser(ctx);
+
+    const record = await ctx.db.get(recordId);
+    if (!record) throw new Error("Registro não encontrado.");
+    if (record.userId !== user._id) throw new Error("Este registro não é seu.");
+    if (record.status === "approved") throw new Error("Registro já aprovado não pode ser alterado.");
+
+    await ctx.db.patch(recordId, {
+      originalTimestamp: record.originalTimestamp ?? record.timestamp,
+      timestamp: newTimestamp,
+      date: new Date(newTimestamp).toISOString().slice(0, 10),
+      status: "pending",
+      ...(note && { note }),
+    });
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// QUERIES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── todayStatus ───────────────────────────────────────────────────────────────
+export const todayStatus = query({
   args: {},
   handler: async (ctx) => {
     const user = await requireUser(ctx);
     const today = todayString();
 
-    // Exige que exista uma entrada antes de registrar saída
-    const entry = await ctx.db
+    const records = await ctx.db
       .query("timeRecords")
       .withIndex("by_user_and_date", (q) =>
         q.eq("userId", user._id).eq("date", today)
       )
-      .filter((q) => q.eq(q.field("type"), "entry"))
-      .first();
+      .collect();
 
-    if (!entry) throw new Error("Nenhuma entrada registrada hoje.");
+    const currentTypes = records.map((r) => r.type as TimeRecordType);
+    const nextType = getNextType(currentTypes);
 
-    // Impede dupla saída no mesmo dia
-    const existingExit = await ctx.db
+    return {
+      records,
+      nextType,
+      nextTypeLabel: getTypeLabel(nextType),
+      isComplete: currentTypes.length === 4,
+    };
+  },
+});
+
+// ─── myTimeRecords ─────────────────────────────────────────────────────────────
+export const myTimeRecords = query({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, { limit = 10 }) => {
+    const user = await requireUser(ctx);
+
+    const records = await ctx.db
       .query("timeRecords")
-      .withIndex("by_user_and_date", (q) =>
-        q.eq("userId", user._id).eq("date", today)
-      )
-      .filter((q) => q.eq(q.field("type"), "exit"))
-      .first();
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .order("desc")
+      .take(limit);
 
-    if (existingExit) throw new Error("Saída já registrada hoje.");
+    // Group by date
+    const grouped: Record<string, typeof records> = {};
+    for (const record of records) {
+      if (!grouped[record.date]) {
+        grouped[record.date] = [];
+      }
+      grouped[record.date].push(record);
+    }
 
-    return await ctx.db.insert("timeRecords", {
-      userId: user._id,
-      type: "exit",
-      timestamp: Date.now(),
-      date: today,
-      status: "pending",
-    });
+    return Object.entries(grouped).map(([date, recs]) => ({
+      date,
+      records: recs.sort((a, b) => a.timestamp - b.timestamp),
+    }));
+  },
+});
+
+// ─── myTimeRecordsWithRevision ────────────────────────────────────────────────
+export const myTimeRecordsWithRevision = query({
+  args: {
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, { limit = 20 }) => {
+    const user = await requireUser(ctx);
+
+    const records = await ctx.db
+      .query("timeRecords")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .filter((q) => q.eq(q.field("status"), "revision_requested"))
+      .order("desc")
+      .take(limit);
+
+    // Group by date
+    const grouped: Record<string, typeof records> = {};
+    for (const record of records) {
+      if (!grouped[record.date]) {
+        grouped[record.date] = [];
+      }
+      grouped[record.date].push(record);
+    }
+
+    return Object.entries(grouped).map(([date, recs]) => ({
+      date,
+      records: recs.sort((a, b) => a.timestamp - b.timestamp),
+    }));
   },
 });
 
@@ -139,6 +260,53 @@ export const rejectRecord = mutation({
       reviewedBy: admin._id,
       reviewedAt: Date.now(),
       note,
+    });
+  },
+});
+
+// ─── requestRevision ─────────────────────────────────────────────────────────
+export const requestRevision = mutation({
+  args: {
+    recordId: v.id("timeRecords"),
+    note: v.string(),
+  },
+  handler: async (ctx, { recordId, note }) => {
+    const admin = await requireAdmin(ctx);
+
+    const record = await ctx.db.get(recordId);
+    if (!record) throw new Error("Registro não encontrado.");
+    if (record.status !== "pending") throw new Error("Registro não está pendente.");
+
+    await ctx.db.patch(recordId, {
+      status: "revision_requested",
+      reviewedBy: admin._id,
+      reviewedAt: Date.now(),
+      note,
+    });
+  },
+});
+
+// ─── updateRecordByEmployee ───────────────────────────────────────────────────
+export const updateRecordByEmployee = mutation({
+  args: {
+    recordId: v.id("timeRecords"),
+    newTimestamp: v.number(),
+    note: v.optional(v.string()),
+  },
+  handler: async (ctx, { recordId, newTimestamp, note }) => {
+    const user = await requireUser(ctx);
+
+    const record = await ctx.db.get(recordId);
+    if (!record) throw new Error("Registro não encontrado.");
+    if (record.userId !== user._id) throw new Error("Este registro não é seu.");
+    if (record.status !== "revision_requested") throw new Error("Este registro não está em revisão.");
+
+    await ctx.db.patch(recordId, {
+      originalTimestamp: record.originalTimestamp ?? record.timestamp,
+      timestamp: newTimestamp,
+      date: new Date(newTimestamp).toISOString().slice(0, 10),
+      status: "pending",
+      ...(note && { note }),
     });
   },
 });
@@ -222,7 +390,6 @@ export const resolveCorrection = mutation({
       ...(adminNote && { adminNote }),
     });
 
-    // Se aprovado e funcionário sugeriu um horário, aplica a edição no registro
     if (approve && correction.suggestedTimestamp) {
       const record = await ctx.db.get(correction.recordId);
       if (record) {
@@ -240,63 +407,8 @@ export const resolveCorrection = mutation({
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// QUERIES
+// ADMIN QUERIES
 // ═══════════════════════════════════════════════════════════════════════════════
-
-// ─── todayStatus — funcionário ────────────────────────────────────────────────
-export const todayStatus = query({
-  args: {},
-  handler: async (ctx) => {
-    const user = await requireUser(ctx);
-    const today = todayString();
-
-    const records = await ctx.db
-      .query("timeRecords")
-      .withIndex("by_user_and_date", (q) =>
-        q.eq("userId", user._id).eq("date", today)
-      )
-      .collect();
-
-    const entry = records.find((r) => r.type === "entry") ?? null;
-    const exit = records.find((r) => r.type === "exit") ?? null;
-
-    return { entry, exit, canClockIn: !entry, canClockOut: !!entry && !exit };
-  },
-});
-
-// ─── myRecords — funcionário ──────────────────────────────────────────────────
-export const myRecords = query({
-  args: {
-    month: v.string(), // "YYYY-MM"
-  },
-  handler: async (ctx, { month }) => {
-    const user = await requireUser(ctx);
-
-    const records = await ctx.db
-      .query("timeRecords")
-      .withIndex("by_user", (q) => q.eq("userId", user._id))
-      .filter((q) => q.gte(q.field("date"), `${month}-01`))
-      .filter((q) => q.lte(q.field("date"), `${month}-31`))
-      .order("desc")
-      .collect();
-
-    return records;
-  },
-});
-
-// ─── myCorrections — funcionário ──────────────────────────────────────────────
-export const myCorrections = query({
-  args: {},
-  handler: async (ctx) => {
-    const user = await requireUser(ctx);
-
-    return await ctx.db
-      .query("correctionRequests")
-      .withIndex("by_user", (q) => q.eq("requestedBy", user._id))
-      .order("desc")
-      .collect();
-  },
-});
 
 // ─── pendingRecords — admin ───────────────────────────────────────────────────
 export const pendingRecords = query({
@@ -310,7 +422,6 @@ export const pendingRecords = query({
       .order("asc")
       .collect();
 
-    // Enriquece cada registro com os dados do funcionário
     return await Promise.all(
       records.map(async (r) => ({
         ...r,
@@ -337,7 +448,7 @@ export const allEmployees = query({
 export const employeeHistory = query({
   args: {
     userId: v.id("users"),
-    month: v.string(), // "YYYY-MM"
+    month: v.string(),
   },
   handler: async (ctx, { userId, month }) => {
     await requireAdmin(ctx);
@@ -369,7 +480,6 @@ export const openCorrections = query({
       .order("asc")
       .collect();
 
-    // Enriquece com dados do registro e do funcionário
     return await Promise.all(
       corrections.map(async (c) => {
         const record = await ctx.db.get(c.recordId);

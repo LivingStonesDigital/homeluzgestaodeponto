@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { ConvexClientProvider } from "@/providers/ConvexClientProvider";
 import ClientProvider from "@/providers/ClientProvider";
+import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -17,8 +18,20 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Executive Ledger - Dashboard",
-  description: "Enterprise Precision Dashboard",
+  title: "HomeLuz - Controle de Ponto",
+  description: "Sistema de controle de ponto eletrônico",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "HomeLuz",
+  },
+  icons: {
+    icon: [{ url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" }],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -29,13 +42,19 @@ export default function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html
-        lang="en"
+        lang="pt-BR"
         className={cn("antialiased", inter.className)}
         suppressContentEditableWarning
       >
-        <body className="bg-surface text-on-surface min-h-screen">
+        <body
+          suppressHydrationWarning
+          className="bg-surface text-on-surface min-h-screen"
+        >
+          <ServiceWorkerRegistration />
           <ConvexClientProvider>
-            <ClientProvider>{children}</ClientProvider>
+            <ClientProvider>
+              {children}
+            </ClientProvider>
           </ConvexClientProvider>
         </body>
       </html>

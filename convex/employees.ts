@@ -12,6 +12,14 @@ async function requireAdmin(ctx: any) {
   return user;
 }
 
+async function requireUser(ctx: any) {
+  const authId = await getAuthUserId(ctx);
+  if (!authId) return null;
+
+  const user = await ctx.db.get(authId);
+  return user;
+}
+
 export const currentUser = query({
   args: {},
   handler: async (ctx) => {
@@ -76,6 +84,24 @@ export const listEmployees = query({
     const users = await ctx.db
       .query("users")
       .filter((q) => q.eq(q.field("role"), "employee"))
+      .filter((q) => q.eq(q.field("isActive"), true))
+      .collect();
+    return users;
+  },
+});
+
+export const listAllUsers = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await requireUser(ctx);
+    if (!user || user.role !== "admin") {
+      return [];
+    }
+
+    const users = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("role"), "employee"))
+      .filter((q) => q.eq(q.field("isActive"), true))
       .collect();
     return users;
   },

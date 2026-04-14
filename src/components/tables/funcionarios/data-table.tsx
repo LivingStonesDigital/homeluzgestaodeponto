@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Eye, Settings } from "lucide-react";
+import { RegisterEmployeeForm } from "@/components/register-employee-form";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -105,6 +106,8 @@ export function FuncionariosTable<TData, TValue>({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <RegisterEmployeeForm />
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">

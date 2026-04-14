@@ -23,7 +23,12 @@ export default defineSchema({
   // ─── Registros de ponto ───────────────────────────────────────────────────
   timeRecords: defineTable({
     userId: v.id("users"),
-    type: v.union(v.literal("entry"), v.literal("exit")),
+    type: v.union(
+      v.literal("work_start"),    // Início do trabalho
+      v.literal("lunch_start"),   // Início do intervalo (almoço)
+      v.literal("lunch_end"),     // Fim do intervalo (almoço)
+      v.literal("work_end")       // Fim do trabalho
+    ),
     // Timestamp em milissegundos (Date.now())
     timestamp: v.number(),
     // Data no formato "YYYY-MM-DD" — facilita filtros por dia/mês
@@ -31,7 +36,8 @@ export default defineSchema({
     status: v.union(
       v.literal("pending"),
       v.literal("approved"),
-      v.literal("rejected")
+      v.literal("rejected"),
+      v.literal("revision_requested")
     ),
     // Preenchido quando um admin edita ou aprova/rejeita o registro
     reviewedBy: v.optional(v.id("users")),
