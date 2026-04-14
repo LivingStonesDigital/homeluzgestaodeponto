@@ -22,8 +22,8 @@ const typeConfig: Record<TimeType, { label: string; icon: React.ReactNode; color
 };
 
 export default function RevisoesPage() {
-  const currentUser = useQuery(api.employees.currentUser);
-  const myTimeRecords = useQuery(api.timeRecords.myTimeRecordsWithRevision);
+  const currentUser = useQuery(api.employees.currentUser, {});
+  const myTimeRecords = useQuery(api.timeRecords.myTimeRecordsWithRevision, {});
   const updateRecordByEmployee = useMutation(api.timeRecords.updateRecordByEmployee);
   const [editingRecord, setEditingRecord] = useState<any>(null);
   const [newTime, setNewTime] = useState("");

@@ -1,5 +1,6 @@
 import { preloadQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -9,7 +10,7 @@ async function FuncionariosId({ params }: Props) {
   const resolvedParams = await params;
 
   const preloadedTasks = await preloadQuery(api.employees.getEmployeeById, {
-    id: resolvedParams.id,
+    id: resolvedParams.id as Id<"users">,
   });
 
   return (
