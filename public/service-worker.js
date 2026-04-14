@@ -18,9 +18,9 @@ const CACHE_NAME = `app-cache-${CACHE_VERSION}`;
 // Recursos essenciais para cache offline (App Shell)
 const PRECACHE_URLS = [
   '/',
-  '/offline.html',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  '/manifest.json',
+  '/manifest-icon-192.maskable.png',
+  '/manifest-icon-512.maskable.png',
 ];
 
 // ─── INSTALL ──────────────────────────────────
@@ -91,13 +91,12 @@ self.addEventListener('fetch', (event) => {
 async function networkFirstStrategy(request) {
   try {
     const networkResponse = await fetch(request);
-    // Atualiza o cache com a resposta mais recente
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
     return networkResponse;
   } catch {
     const cached = await caches.match(request);
-    return cached || caches.match('/offline.html');
+    return cached || new Response('Offline', { status: 503 });
   }
 }
 
@@ -105,20 +104,18 @@ async function networkFirstStrategy(request) {
 async function cacheFirstStrategy(request) {
   const cached = await caches.match(request);
   if (cached) {
-    // Revalida em background (stale-while-revalidate)
     fetch(request).then((networkResponse) => {
       caches.open(CACHE_NAME).then((cache) => cache.put(request, networkResponse));
-    }).catch(() => {/* ignora erros de rede no background */});
+    }).catch(() => {});
     return cached;
   }
-  // Não estava no cache, busca na rede
   try {
     const networkResponse = await fetch(request);
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
     return networkResponse;
   } catch {
-    return caches.match('/offline.html');
+    return new Response('Offline', { status: 503 });
   }
 }
 
