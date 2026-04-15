@@ -14,8 +14,8 @@ export function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-sans text-2xl font-semibold text-foreground">
-              HomeLuz
+            <span className="uppercase font-sans text-2xl font-semibold text-foreground">
+              Home Luz
             </span>
           </Link>
 
