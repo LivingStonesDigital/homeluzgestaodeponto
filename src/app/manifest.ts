@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "HomeLuz",
     description: "Sistema de controle de ponto eletrônico",
     
-    start_url: "/",
+    start_url: "/login",
     scope: "/",
     
     display: "standalone",
