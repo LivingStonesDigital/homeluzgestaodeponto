@@ -1,12 +1,10 @@
 "use client";
 
+import ContactsTable from "@/components/contacts-table";
+import { StatsGrid } from "@/components/stats-grid";
+import { Button } from "@/components/ui/button";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
-import { FuncionariosTable } from "@/components/tables/funcionarios/data-table";
-import { columns } from "@/components/tables/funcionarios/columns";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { RegisterEmployeeForm } from "@/components/register-employee-form";
 
 function page() {
   const employees = useQuery(api.employees.listEmployees);
@@ -15,25 +13,27 @@ function page() {
     return <div>Loading...</div>;
   }
 
+
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Main Content Canvas */}
-      <main className="flex-1 p-4 rounded-2xl bg-surface">
-        <header className="mb-4 flex justify-between items-center md:items-end">
-          <div>
-            <h1 className="text-4xl font-extrabold tracking-tight text-primary headline-font mb-2">
-              Minha Equipe
-            </h1>
-            <p className="hidden md:blocktext-on-surface-variant font-medium">
-              Review and validate employee time records for the current period.
-            </p>
-          </div>
-          <div className="flex space-x-3 ">
-            
-          </div>
-        </header>
-        <FuncionariosTable data={employees as any} columns={columns} />
-      </main>
+    <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">
+      {/* Page intro */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold">Minha Equipe</h1>
+          <p className="text-sm text-muted-foreground">
+            Aqui está uma visão geral de seus colaboradores. Gerencie ou crie
+            novos com facilidade!
+          </p>
+        </div>
+        <Button className="px-3">Add Contact</Button>
+      </div>
+      {/* Numbers */}
+      
+      {/* Table */}
+      <div className="min-h-[100vh] flex-1 md:min-h-min">
+        <ContactsTable  />
+      </div>
     </div>
   );
 }

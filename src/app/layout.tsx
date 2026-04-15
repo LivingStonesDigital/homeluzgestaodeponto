@@ -18,7 +18,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "HomeLuz - Controle de Ponto",
+  title: "HomeLuz",
   description: "Sistema de controle de ponto eletrônico",
   manifest: "/manifest.json",
   appleWebApp: {
