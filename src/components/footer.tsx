@@ -138,7 +138,7 @@ export function Footer() {
                 <p className="text-background/60 text-sm">
                   Desenvolvido com ❤️ por
                   <a
-                    href="https://livingstones.netlify.app"
+                    href="https://livingstonesdigital.netlify.app"
                     target="_blank"
                     className="text-background/60 hover:text-background text-sm transition-colors"
                   >

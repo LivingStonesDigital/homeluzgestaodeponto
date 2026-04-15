@@ -223,7 +223,7 @@ function AprovacoesPage() {
                       )}
                     </div>
 
-                    <div className="flex gap-2 justify-end">
+                    <div className="flex gap-2 flex-col md:flex-row justify-end">
                       <Button
                         variant="outline"
                         onClick={() => handleRequestRevision(group.records.map((r: any) => r._id))}
