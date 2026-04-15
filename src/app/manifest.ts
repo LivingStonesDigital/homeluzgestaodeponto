@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "HomeLuz - Controle de Ponto",
+    name: "HomeLuz",
     short_name: "HomeLuz",
     description: "Sistema de controle de ponto eletrônico",
     
@@ -10,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     
     display: "standalone",
-    orientation: "portrait",
+    orientation: "any",
     
     background_color: "#ffffff",
     theme_color: "#000000",

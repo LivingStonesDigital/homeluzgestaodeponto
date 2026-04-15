@@ -58,7 +58,7 @@
   --color-tertiary-fixed: #f9e190;
   --color-primary-fixed: #e0e0ff;
   --color-on-primary-fixed-variant: #343d96;
-  --color-on-tertiary-container: #D4AF37;
+  --color-on-tertiary-container: #d4af37;
   --color-on-secondary-fixed-variant: #354a53;
   --color-tertiary-container: #3d2e00;
   --color-inverse-primary: #bdc2ff;
@@ -77,7 +77,7 @@
   --color-on-secondary-container: #526772;
   --color-primary-container: #1a237e;
   --color-primary: #000666;
-  --color-tertiary-fixed-dim: #D4AF37;
+  --color-tertiary-fixed-dim: #d4af37;
   --color-surface-container: #edeeef;
   --color-on-secondary: #ffffff;
   --color-inverse-on-surface: #f0f1f2;
@@ -95,9 +95,9 @@
   --color-outline-variant: #c6c5d4;
   --color-surface-container-lowest: #ffffff;
   --color-outline-stitch: #767683;
-  --color-gold-primary: #D4AF37;
+  --color-gold-primary: #d4af37;
   --color-gold-dark: #b08d2c;
-  
+
   --font-headline: var(--font-manrope);
   --font-body: var(--font-inter);
   --font-label: var(--font-inter);
@@ -107,6 +107,23 @@
 ::selection {
   background-color: var(--custom-bg-primary);
   color: var(--primary-foreground);
+}
+
+.primary-gradient {
+  background: linear-gradient(135deg, #00488d 0%, #005fb8 100%);
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 :root {
@@ -196,10 +213,13 @@
 }
 
 .material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
 }
 .glass-effect {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
 }
-
