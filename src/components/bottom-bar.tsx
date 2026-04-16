@@ -48,11 +48,11 @@ const navItemsByRole: Record<
   ],
   employee: [
     { icon: <Home className="w-5 h-5" />, label: "Home", href: "/dashboard" },
-    {
-      icon: <Clock className="w-5 h-5" />,
-      label: "Ponto",
-      href: "/dashboard/ponto",
-    },
+    // {
+    //   icon: <Clock className="w-5 h-5" />,
+    //   label: "Ponto",
+    //   href: "/dashboard/ponto",
+    // },
     {
       icon: <List className="w-5 h-5" />,
       label: "Historico",

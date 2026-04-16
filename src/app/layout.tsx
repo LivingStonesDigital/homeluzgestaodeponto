@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   title: "HomeLuz",
   description: "Sistema de controle de ponto eletrônico",
   manifest: "/manifest.json",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
