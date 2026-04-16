@@ -37,22 +37,22 @@ const typeConfig: Record<
 > = {
   work_start: {
     label: "Entrada",
-    icon: <Clock classNameNameName="h-4 w-4" />,
+    icon: <Clock className="h-4 w-4" />,
     color: "bg-green-500",
   },
   lunch_start: {
     label: "Saída",
-    icon: <Coffee classNameNameName="h-4 w-4" />,
+    icon: <Coffee className="h-4 w-4" />,
     color: "bg-yellow-500",
   },
   lunch_end: {
     label: "Entrada",
-    icon: <Coffee classNameNameName="h-4 w-4" />,
+    icon: <Coffee className="h-4 w-4" />,
     color: "bg-blue-500",
   },
   work_end: {
     label: "Saída",
-    icon: <Sunset classNameNameName="h-4 w-4" />,
+    icon: <Sunset className="h-4 w-4" />,
     color: "bg-red-500",
   },
 };
