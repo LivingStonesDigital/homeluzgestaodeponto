@@ -1,9 +1,19 @@
+'use client'
 import BottomBar from "@/components/bottom-bar";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
+import { useAuthActions } from "@convex-dev/auth/react";
 import { ChevronRight, HelpCircle, HelpCircleIcon, IdCard, LogOut, Mail, MessageCircleQuestion, Palette, Pencil, ShieldCheck, User2 } from "lucide-react";
 
 function page() {
+
+  const {signOut} = useAuthActions()
+
+  const handleSignOut = async () => {
+    await signOut()
+    window.location.href = "/login"
+  }
+
   return (
     <main className="bg-surface text-on-surface min-h-screen pb-32">
       <section className="pt-14 px-6 max-w-md mx-auto">
@@ -122,7 +132,7 @@ function page() {
             </div> */}
           </div>
         </section>
-        <Button variant={'destructive'} size={'lg'} className="w-full py-4 flex items-center justify-center gap-2  transition-all active:scale-[0.98] mb-8">
+        <Button onClick={() => signOut()} variant={'destructive'} size={'lg'} className="w-full py-4 flex items-center justify-center gap-2  transition-all active:scale-[0.98] mb-8">
           <LogOut />
           Sair da Conta
         </Button>
