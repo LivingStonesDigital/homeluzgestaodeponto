@@ -1,6 +1,18 @@
 "use client";
 
-import { HTMLAttributes } from "react";
+import React, { DetailedHTMLProps, HTMLAttributes } from "react";
+
+type IconifyIconIntrinsicProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> & {
+  icon: string;
+};
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "iconify-icon": IconifyIconIntrinsicProps;
+    }
+  }
+}
 
 interface IconifyIconProps extends HTMLAttributes<HTMLElement> {
   icon: string;
@@ -8,11 +20,9 @@ interface IconifyIconProps extends HTMLAttributes<HTMLElement> {
 }
 
 export function IconifyIcon({ icon, className = "", ...props }: IconifyIconProps) {
-  return (
-    <iconify-icon
-      icon={icon}
-      className={className}
-      {...props}
-    />
-  );
+  return React.createElement("iconify-icon" as any, {
+    icon,
+    className,
+    ...props,
+  });
 }
