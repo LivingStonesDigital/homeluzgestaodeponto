@@ -7,8 +7,23 @@ type TimeRecordType = "work_start" | "lunch_start" | "lunch_end" | "work_end";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function dateStringFromTimestamp(timestamp = Date.now()): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date(timestamp));
+
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+
+  return `${year}-${month}-${day}`;
+}
+
 function todayString(): string {
-  return new Date().toISOString().slice(0, 10);
+  return dateStringFromTimestamp();
 }
 
 function getTypeLabel(type: TimeRecordType): string {
@@ -36,6 +51,15 @@ async function requireAdmin(ctx: any) {
   return user;
 }
 
+async function getRevisionPermission(ctx: any, userId: any, date: string) {
+  return await ctx.db
+    .query("revisionPermissions")
+    .withIndex("by_user_and_date", (q: any) =>
+      q.eq("userId", userId).eq("date", date)
+    )
+    .first();
+}
+
 function getNextType(currentTypes: TimeRecordType[]): TimeRecordType {
   if (!currentTypes.includes("work_start")) return "work_start";
   if (!currentTypes.includes("lunch_start")) return "lunch_start";
@@ -44,9 +68,36 @@ function getNextType(currentTypes: TimeRecordType[]): TimeRecordType {
   return "work_end";
 }
 
+function getStatusFromType(type: TimeRecordType): "online" | "pausa" | "ausente" {
+  switch (type) {
+    case "work_start":
+      return "online";
+    case "lunch_start":
+      return "pausa";
+    case "lunch_end":
+      return "online";
+    case "work_end":
+      return "ausente";
+  }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MUTATIONS
 // ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── updateUserStatus ─────────────────────────────────────────────────────────────
+export const updateUserStatus = mutation({
+  args: {
+    userId: v.id("users"),
+    status: v.union(v.literal("online"), v.literal("pausa"), v.literal("ausente")),
+  },
+  handler: async (ctx, { userId, status }) => {
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("Usuário não encontrado.");
+
+    await ctx.db.patch(userId, { status });
+  },
+});
 
 // ─── registerTime ─────────────────────────────────────────────────────────────
 export const registerTime = mutation({
@@ -62,8 +113,8 @@ export const registerTime = mutation({
   },
   handler: async (ctx, { type, timestamp, userId }) => {
     const currentUser = await requireUser(ctx);
-    const today = todayString();
     const time = timestamp || Date.now();
+    const today = dateStringFromTimestamp(time);
 
     // If userId is provided, admin is registering for another user
     let targetUser = currentUser;
@@ -100,6 +151,11 @@ export const registerTime = mutation({
       timestamp: time,
       date: today,
       status: "pending",
+    }).then(async (recordId) => {
+      // Atualiza o status do usuário baseado no tipo de registro
+      const newStatus = getStatusFromType(type);
+      await ctx.db.patch(targetUser._id, { status: newStatus });
+      return recordId;
     });
   },
 });
@@ -122,7 +178,7 @@ export const editTimeRecord = mutation({
     await ctx.db.patch(recordId, {
       originalTimestamp: record.originalTimestamp ?? record.timestamp,
       timestamp: newTimestamp,
-      date: new Date(newTimestamp).toISOString().slice(0, 10),
+      date: dateStringFromTimestamp(newTimestamp),
       status: "pending",
       ...(note && { note }),
     });
@@ -186,6 +242,82 @@ export const myTimeRecords = query({
       date,
       records: recs.sort((a, b) => a.timestamp - b.timestamp),
     }));
+  },
+});
+
+// ─── myTimeRecordDayDetails ──────────────────────────────────────────────────
+export const myTimeRecordDayDetails = query({
+  args: {
+    recordId: v.id("timeRecords"),
+  },
+  handler: async (ctx, { recordId }) => {
+    const user = await requireUser(ctx);
+
+    const selectedRecord = await ctx.db.get(recordId);
+    if (!selectedRecord || selectedRecord.userId !== user._id) return null;
+
+    const records = await ctx.db
+      .query("timeRecords")
+      .withIndex("by_user_and_date", (q) =>
+        q.eq("userId", user._id).eq("date", selectedRecord.date)
+      )
+      .collect();
+
+    return {
+      date: selectedRecord.date,
+      selectedRecord,
+      records: records.sort((a, b) => a.timestamp - b.timestamp),
+    };
+  },
+});
+
+// ─── myTimeRecordsByDate ─────────────────────────────────────────────────────
+export const myTimeRecordsByDate = query({
+  args: {
+    date: v.string(),
+  },
+  handler: async (ctx, { date }) => {
+    const user = await requireUser(ctx);
+
+    const records = await ctx.db
+      .query("timeRecords")
+      .withIndex("by_user_and_date", (q) =>
+        q.eq("userId", user._id).eq("date", date)
+      )
+      .collect();
+
+    const recordsWithOpenCorrections = await Promise.all(
+      records.map(async (record) => {
+        const openCorrection = await ctx.db
+          .query("correctionRequests")
+          .withIndex("by_record", (q) => q.eq("recordId", record._id))
+          .filter((q) => q.eq(q.field("status"), "open"))
+          .first();
+
+        return {
+          ...record,
+          openCorrection,
+        };
+      })
+    );
+
+    return recordsWithOpenCorrections.sort((a, b) => a.timestamp - b.timestamp);
+  },
+});
+
+// ─── myRevisionPermissionByDate ──────────────────────────────────────────────
+export const myRevisionPermissionByDate = query({
+  args: {
+    date: v.string(),
+  },
+  handler: async (ctx, { date }) => {
+    const user = await requireUser(ctx);
+    const permission = await getRevisionPermission(ctx, user._id, date);
+
+    return {
+      enabled: permission?.enabled ?? false,
+      permission,
+    };
   },
 });
 
@@ -304,7 +436,7 @@ export const updateRecordByEmployee = mutation({
     await ctx.db.patch(recordId, {
       originalTimestamp: record.originalTimestamp ?? record.timestamp,
       timestamp: newTimestamp,
-      date: new Date(newTimestamp).toISOString().slice(0, 10),
+      date: dateStringFromTimestamp(newTimestamp),
       status: "pending",
       ...(note && { note }),
     });
@@ -327,10 +459,35 @@ export const editRecord = mutation({
     await ctx.db.patch(recordId, {
       originalTimestamp: record.originalTimestamp ?? record.timestamp,
       timestamp: newTimestamp,
-      date: new Date(newTimestamp).toISOString().slice(0, 10),
+      date: dateStringFromTimestamp(newTimestamp),
       status: "approved",
       reviewedBy: admin._id,
       reviewedAt: Date.now(),
+      ...(note && { note }),
+    });
+  },
+});
+
+// ─── editPendingRecord ───────────────────────────────────────────────────────────
+export const editPendingRecord = mutation({
+  args: {
+    recordId: v.id("timeRecords"),
+    newTimestamp: v.number(),
+    note: v.optional(v.string()),
+  },
+  handler: async (ctx, { recordId, newTimestamp, note }) => {
+    const user = await requireUser(ctx);
+
+    const record = await ctx.db.get(recordId);
+    if (!record) throw new Error("Registro não encontrado.");
+    if (record.userId !== user._id) throw new Error("Este registro não é seu.");
+    if (record.status !== "pending") throw new Error("Este registro não está pendente.");
+
+    await ctx.db.patch(recordId, {
+      originalTimestamp: record.originalTimestamp ?? record.timestamp,
+      timestamp: newTimestamp,
+      date: dateStringFromTimestamp(newTimestamp),
+      status: "pending",
       ...(note && { note }),
     });
   },
@@ -349,6 +506,14 @@ export const requestCorrection = mutation({
     const record = await ctx.db.get(recordId);
     if (!record) throw new Error("Registro não encontrado.");
     if (record.userId !== user._id) throw new Error("Este registro não é seu.");
+    if (record.status !== "approved") {
+      throw new Error("Só é possível solicitar revisão de registros já aprovados.");
+    }
+
+    const permission = await getRevisionPermission(ctx, user._id, record.date);
+    if (!permission?.enabled) {
+      throw new Error("A solicitação de revisão desse dia ainda não foi liberada pelo administrador.");
+    }
 
     // Impede duplicata de pedido em aberto para o mesmo registro
     const existing = await ctx.db
@@ -396,13 +561,44 @@ export const resolveCorrection = mutation({
         await ctx.db.patch(correction.recordId, {
           originalTimestamp: record.originalTimestamp ?? record.timestamp,
           timestamp: correction.suggestedTimestamp,
-          date: new Date(correction.suggestedTimestamp).toISOString().slice(0, 10),
+          date: dateStringFromTimestamp(correction.suggestedTimestamp),
           status: "approved",
           reviewedBy: admin._id,
           reviewedAt: Date.now(),
         });
       }
     }
+  },
+});
+
+// ─── setRevisionPermission — admin ───────────────────────────────────────────
+export const setRevisionPermission = mutation({
+  args: {
+    userId: v.id("users"),
+    date: v.string(),
+    enabled: v.boolean(),
+  },
+  handler: async (ctx, { userId, date, enabled }) => {
+    const admin = await requireAdmin(ctx);
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("Funcionário não encontrado.");
+
+    const existing = await getRevisionPermission(ctx, userId, date);
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        enabled,
+        updatedAt: Date.now(),
+      });
+      return existing._id;
+    }
+
+    return await ctx.db.insert("revisionPermissions", {
+      userId,
+      date,
+      enabled,
+      createdBy: admin._id,
+      createdAt: Date.now(),
+    });
   },
 });
 
@@ -426,6 +622,7 @@ export const pendingRecords = query({
       records.map(async (r) => ({
         ...r,
         user: await ctx.db.get(r.userId),
+        revisionPermission: await getRevisionPermission(ctx, r.userId, r.date),
       }))
     );
   },
@@ -484,8 +681,120 @@ export const openCorrections = query({
       corrections.map(async (c) => {
         const record = await ctx.db.get(c.recordId);
         const user = record ? await ctx.db.get(record.userId) : null;
-        return { ...c, record, user };
+        return {
+          ...c,
+          record: record ? {
+            _id: record._id,
+            type: record.type,
+            timestamp: record.timestamp,
+            date: record.date,
+            status: record.status,
+          } : null,
+          user: user ? {
+            _id: user._id,
+            name: user.name,
+            avatarUrl: user.avatarUrl,
+            department: user.department,
+          } : null,
+        };
       })
     );
+  },
+});
+
+// ─── allRecordsByDate — admin ──────────────────────────────────────────────────
+export const allRecordsByDate = query({
+  args: {
+    date: v.optional(v.string()),
+    department: v.optional(v.string()),
+    search: v.optional(v.string()),
+  },
+  handler: async (ctx, { date, department, search }) => {
+    await requireAdmin(ctx);
+
+    // Busca todos os usuários ativos
+    let users = await ctx.db
+      .query("users")
+      .withIndex("by_role", (q) => q.eq("role", "employee"))
+      .collect();
+
+    // Filtra por departamento se fornecido
+    if (department) {
+      users = users.filter((u) => u.department === department);
+    }
+
+    // Filtra por busca se fornecido
+    if (search) {
+      const searchLower = search.toLowerCase();
+      users = users.filter((u) =>
+        u.name.toLowerCase().includes(searchLower) ||
+        (u.department && u.department.toLowerCase().includes(searchLower))
+      );
+    }
+
+    // Se não houver data, usa hoje
+    const targetDate = date || todayString();
+
+    // Busca registros para a data alvo
+    const records = await ctx.db
+      .query("timeRecords")
+      .withIndex("by_date", (q) => q.eq("date", targetDate))
+      .collect();
+
+    // Agrupa por usuário
+    const result = users.map((user) => {
+      const userRecords = records.filter((r) => r.userId === user._id);
+      const workStart = userRecords.find((r) => r.type === "work_start");
+      const workEnd = userRecords.find((r) => r.type === "work_end");
+      const lunchStart = userRecords.find((r) => r.type === "lunch_start");
+      const lunchEnd = userRecords.find((r) => r.type === "lunch_end");
+
+      // Determina status
+      let status = "absent";
+      if (workStart && workEnd) {
+        status = "finished";
+      } else if (workStart && lunchStart && !lunchEnd) {
+        status = "on_break";
+      } else if (workStart) {
+        status = "present";
+      }
+
+      return {
+        user: {
+          _id: user._id,
+          name: user.name,
+          avatarUrl: user.avatarUrl,
+          department: user.department,
+          role: user.role,
+        },
+        workStart,
+        workEnd,
+        lunchStart,
+        lunchEnd,
+        status,
+      };
+    });
+
+    return result;
+  },
+});
+
+// ─── allDepartments — admin ───────────────────────────────────────────────────
+export const allDepartments = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+
+    const users = await ctx.db
+      .query("users")
+      .withIndex("by_role", (q) => q.eq("role", "employee"))
+      .collect();
+
+    const departments = new Set<string>();
+    users.forEach((u) => {
+      if (u.department) departments.add(u.department);
+    });
+
+    return Array.from(departments).sort();
   },
 });

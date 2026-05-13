@@ -3,7 +3,7 @@ import React from "react";
 
 function Navbar() {
   return (
-    <header className="bg-white dark:bg-slate-950 sticky top-0 w-full z-50 shadow ">
+    <header className="bg-white dark:bg-zinc-900 sticky top-0 w-full z-50 shadow ">
       <div className="flex justify-between items-center px-6 h-16 w-full max-w-md mx-auto">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden bg-primary-container flex items-center justify-center">

@@ -1,6 +1,6 @@
 import { AuthGuard } from "@/components/auth-guard";
 import BottomBar from "@/components/bottom-bar";
-import Navbar from "@/components/navbar";
+import { ThemeProvider } from "@/providers/theme-provider";
 import React from "react";
 
 interface Props {
@@ -10,11 +10,15 @@ interface Props {
 function DashboardLayout({ children }: Props) {
   return (
     <AuthGuard>
-      <Navbar />
-      {/* <PageTransition> */}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem
+        disableTransitionOnChange
+      >
         {children}
-      {/* </PageTransition> */}
-      <BottomBar/>
+        <BottomBar style={{ viewTransitionName: "bottom-bar" }} />
+      </ThemeProvider>
     </AuthGuard>
   );
 }

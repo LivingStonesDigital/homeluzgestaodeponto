@@ -86,7 +86,15 @@ export const listEmployees = query({
       .filter((q) => q.eq(q.field("role"), "employee"))
       .filter((q) => q.eq(q.field("isActive"), true))
       .collect();
-    return users;
+    return users.map((user) => ({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+      department: user.department,
+      status: user.status,
+    }));
   },
 });
 
@@ -103,7 +111,15 @@ export const listAllUsers = query({
       .filter((q) => q.eq(q.field("role"), "employee"))
       .filter((q) => q.eq(q.field("isActive"), true))
       .collect();
-    return users;
+    return users.map((user) => ({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+      department: user.department,
+      status: user.status,
+    }));
   },
 });
 
