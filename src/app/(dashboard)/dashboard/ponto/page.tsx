@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { DirectionalTransition } from "@/components/directional-transition";
 import { IconifyIcon } from "@/components/ui/iconify-icon";
 
-type TimeType = "work_start" | "lunch_start" | "lunch_end" "work_end";
+type TimeType = "work_start" | "lunch_start" | "lunch_end" | "work_end";
 
 const typeConfig: Record<
   TimeType,
