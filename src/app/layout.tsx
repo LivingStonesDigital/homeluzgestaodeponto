@@ -7,6 +7,7 @@ import { ConvexClientProvider } from "@/providers/ConvexClientProvider";
 import ClientProvider from "@/providers/ClientProvider";
 import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
 
+
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
   title: "HomeLuz",
   description: "Sistema de controle de ponto eletrônico",
   manifest: "/manifest.json",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+  viewport:
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -53,9 +55,7 @@ export default function RootLayout({
         >
           <ServiceWorkerRegistration />
           <ConvexClientProvider>
-            <ClientProvider>
-              {children}
-            </ClientProvider>
+            <ClientProvider>{children}</ClientProvider>
           </ConvexClientProvider>
         </body>
       </html>

@@ -13,21 +13,26 @@ export default defineSchema({
     role: v.union(v.literal("employee"), v.literal("admin")),
     department: v.optional(v.string()),
     isActive: v.boolean(),
+    status: v.optional(
+      v.union(v.literal("online"), v.literal("pausa"), v.literal("ausente")),
+    ),
+    avatarUrl: v.optional(v.string()),
     // ID externo do Convex Auth (ligação com a tabela de autenticação)
     tokenIdentifier: v.optional(v.string()),
   })
     .index("by_email", ["email"])
     .index("by_token", ["tokenIdentifier"])
-    .index("by_role", ["role"]),
+    .index("by_role", ["role"])
+    .index("by_status", ["status"]),
 
   // ─── Registros de ponto ───────────────────────────────────────────────────
   timeRecords: defineTable({
     userId: v.id("users"),
     type: v.union(
-      v.literal("work_start"),    // Início do trabalho
-      v.literal("lunch_start"),   // Início do intervalo (almoço)
-      v.literal("lunch_end"),     // Fim do intervalo (almoço)
-      v.literal("work_end")       // Fim do trabalho
+      v.literal("work_start"), // Início do trabalho
+      v.literal("lunch_start"), // Início do intervalo (almoço)
+      v.literal("lunch_end"), // Fim do intervalo (almoço)
+      v.literal("work_end"), // Fim do trabalho
     ),
     // Timestamp em milissegundos (Date.now())
     timestamp: v.number(),
@@ -37,7 +42,10 @@ export default defineSchema({
       v.literal("pending"),
       v.literal("approved"),
       v.literal("rejected"),
-      v.literal("revision_requested")
+      v.literal("revision_requested"),
+      v.literal("revision_approved"),
+      v.literal("revision_rejected"),
+      v.literal("finished"),
     ),
     // Preenchido quando um admin edita ou aprova/rejeita o registro
     reviewedBy: v.optional(v.id("users")),
@@ -61,7 +69,7 @@ export default defineSchema({
     status: v.union(
       v.literal("open"),
       v.literal("approved"),
-      v.literal("rejected")
+      v.literal("rejected"),
     ),
     // Preenchido pelo admin ao resolver
     resolvedBy: v.optional(v.id("users")),
@@ -71,4 +79,16 @@ export default defineSchema({
     .index("by_record", ["recordId"])
     .index("by_user", ["requestedBy"])
     .index("by_status", ["status"]),
+
+  // ─── Permissões de revisão por funcionário/data ──────────────────────────
+  revisionPermissions: defineTable({
+    userId: v.id("users"),
+    date: v.string(),
+    enabled: v.boolean(),
+    createdBy: v.id("users"),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_user_and_date", ["userId", "date"])
+    .index("by_enabled", ["enabled"]),
 });

@@ -1,10 +1,39 @@
 "use client";
-import { LoginForm } from "@/components/login-form";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { Container, Home, Lock, Mail } from "lucide-react";
+import { Home, Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
+const STORAGE_VERSION = 1;
+const STORAGE_KEY_PREFIX = "homeluz_";
+
+function getStorageData<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${key}`);
+    if (!raw) return null;
+
+    const data = JSON.parse(raw);
+    if (data.version !== STORAGE_VERSION) {
+      localStorage.removeItem(`${STORAGE_KEY_PREFIX}${key}`);
+      return null;
+    }
+    return data.value as T;
+  } catch {
+    return null;
+  }
+}
+
+function setStorageData<T>(key: string, value: T): void {
+  try {
+    const data = { version: STORAGE_VERSION, value };
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}${key}`, JSON.stringify(data));
+  } catch (error) {
+    console.error("Failed to save to localStorage:", error);
+  }
+}
+
 export default function LoginPage() {
   const { signIn } = useAuthActions();
   const router = useRouter();
@@ -24,6 +53,19 @@ export default function LoginPage() {
       );
     }
   };
+
+  const saveCredentials = (email: string, password: string) => {
+    const savedEmail = getStorageData<string>("email");
+    const savedPassword = getStorageData<string>("password");
+
+    if (savedEmail !== email || savedPassword !== password) {
+      setStorageData("email", email);
+      setStorageData("password", password);
+    }
+
+    toast.success("Credentials saved successfully!");
+  };
+
   return (
     <main className="min-h-screen flex flex-col justify-center items-center px-6 relative overflow-hidden">
       <div className="fixed top-0 right-0 -z-10 opacity-20 pointer-events-none">
@@ -88,7 +130,13 @@ export default function LoginPage() {
               />
             </div>
           </div>
-          <div className="flex justify-end pr-1">
+          <div className="flex justify-between items-center pr-1">
+            <div>
+              <label className="inline-flex items-center text-xs font-bold text-on-surface-variant/80 tracking-tight">
+                <Checkbox id="remember" className="mr-2" />
+                Lembrar-me
+              </label>
+            </div>
             <a
               className="text-primary text-xs font-bold hover:text-primary-container transition-colors tracking-tight"
               href="#"

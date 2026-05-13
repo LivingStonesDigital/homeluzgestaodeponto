@@ -6,6 +6,18 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+type FuncionariosType = {
+  _id: Id<"users">;
+  _creationTime: number;
+  birthDate?: string | undefined;
+  department?: string | undefined;
+  tokenIdentifier?: string | undefined;
+  name: string;
+  email: string;
+  role: "employee" | "admin";
+  isActive: boolean;
+};
+
 async function FuncionariosId({ params }: Props) {
   const resolvedParams = await params;
 
@@ -13,18 +25,11 @@ async function FuncionariosId({ params }: Props) {
     id: resolvedParams.id as Id<"users">,
   });
 
+  console.log(preloadedTasks);
+
   return (
-    <div className="w-full h-screen grid place-items-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">
-          Funcionário ID: {resolvedParams.id}
-        </h1>
-        <p className="text-gray-600">
-          Aqui você pode exibir detalhes do funcionário, editar informações ou
-          realizar outras ações relacionadas a este funcionário específico.
-        </p>
-      </div>
-      {JSON.stringify(preloadedTasks)}
+    <div className="h-screen grid place-items-center">
+      {preloadedTasks._valueJSON.name}
     </div>
   );
 }

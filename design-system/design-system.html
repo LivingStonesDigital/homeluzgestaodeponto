@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TRST | Design System</title>
+<script src="assets/resource_3fa48481346f.js"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="assets/css2_4c7da8ae08f4.css" rel="stylesheet"/>
+<script src="assets/iconify-icon_e19829e7f0e8.js"></script>
+<style>
+body {
+font-family: 'Geist', sans-serif;
+}
+.font-playfair {
+font-family: 'Playfair Display', serif !important;
+}
+/* Iconify Icon Stroke Width Customization */
+iconify-icon {
+stroke-width: 1.5;
+}
+/* Scrollbar */
+::-webkit-scrollbar {
+width: 0.5rem;
+}
+::-webkit-scrollbar-track {
+background: #ebedea;
+}
+::-webkit-scrollbar-thumb {
+background: #2d322f;
+border-radius: 9999px;
+}
+/* Scroll Animation System */
+.reveal {
+opacity: 0;
+transform: translateY(30px);
+filter: blur(8px);
+transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.reveal-scale {
+transform: translateY(20px) scale(0.95);
+}
+.reveal.reveal-left {
+transform: translateX(-40px);
+}
+.reveal.reveal-right {
+transform: translateX(40px);
+}
+.reveal.in-view {
+opacity: 1;
+transform: translate(0) scale(1);
+filter: blur(0px);
+}
+/* Stagger Delays */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+/* Background Grid */
+.bg-grid {
+background-image:
+linear-gradient(to right, rgba(45,50,47,0.05) 1px, transparent 1px),
+linear-gradient(to bottom, rgba(45,50,47,0.05) 1px, transparent 1px);
+background-size: 3rem 3rem;
+}
+.bg-grid-dark {
+background-image:
+linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+background-size: 4rem 4rem;
+}
+/* Custom Range Slider */
+input[type=range]::-webkit-slider-thumb {
+-webkit-appearance: none;
+height: 1.25rem;
+width: 1.25rem;
+border-radius: 50%;
+background: #ffffff;
+cursor: pointer;
+margin-top: -0.375rem;
+box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+input[type=range]::-webkit-slider-runnable-track {
+width: 100%;
+height: 0.5rem;
+cursor: pointer;
+background: rgba(255,255,255,0.1);
+border-radius: 9999px;
+}
+/* Design System Navigation */
+.ds-nav {
+position: sticky;
+top: 0;
+z-index: 100;
+background: #ebedea/90;
+backdrop-filter: blur(12px);
+border-bottom: 1px solid #2d322f/10;
+padding: 1rem 2rem;
+display: flex;
+gap: 2rem;
+overflow-x: auto;
+white-space: nowrap;
+}
+.ds-nav a {
+color: #2d322f/70;
+text-decoration: none;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.2em;
+transition: color 0.3s;
+}
+.ds-nav a:hover {
+color: #4ba3e3;
+}
+.ds-nav a.active {
+color: #4ba3e3;
+font-weight: 500;
+}
+/* Spec Table */
+.spec-table {
+width: 100%;
+border-collapse: collapse;
+}
+.spec-table th,
+.spec-table td {
+padding: 1rem 1.5rem;
+text-align: left;
+border-bottom: 1px solid #2d322f/10;
+}
+.spec-table th {
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.2em;
+color: #2d322f/50;
+font-weight: 500;
+}
+.spec-table td:first-child {
+width: 200px;
+}
+.spec-table td:last-child {
+text-align: right;
+color: #2d322f/50;
+font-size: 0.875rem;
+font-family: monospace;
+}
+/* Color Swatch */
+.color-swatch {
+width: 100%;
+height: 80px;
+border-radius: 0.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+.color-swatch.dark {
+color: white;
+}
+.color-swatch.light {
+color: #2d322f;
+}
+/* Component States */
+.component-states {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+align-items: center;
+}
+.state-label {
+font-size: 0.625rem;
+text-transform: uppercase;
+letter-spacing: 0.15em;
+color: #2d322f/50;
+margin-bottom: 0.5rem;
+}
+/* Motion Gallery */
+.motion-gallery {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 1.5rem;
+}
+.motion-item {
+padding: 2rem;
+background: white;
+border: 1px solid #2d322f/10;
+border-radius: 1rem;
+text-align: center;
+}
+.motion-item .label {
+font-size: 0.625rem;
+text-transform: uppercase;
+letter-spacing: 0.15em;
+color: #2d322f/50;
+margin-top: 1rem;
+}
+/* Icon Grid */
+.icon-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+gap: 1rem;
+}
+.icon-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.5rem;
+padding: 1.5rem;
+background: white;
+border: 1px solid #2d322f/10;
+border-radius: 0.75rem;
+transition: all 0.3s;
+}
+.icon-item:hover {
+border-color: #4ba3e3/30;
+transform: translateY(-2px);
+}
+.icon-item .label {
+font-size: 0.625rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: #2d322f/50;
+text-align: center;
+}
+</style>
+<script>
+tailwind.config = {
+theme: {
+extend: {}
+},
+plugins: [
+function({ addUtilities }) {
+const rotateXUtilities = {};
+const rotateYUtilities = {};
+const rotateZUtilities = {};
+const rotateValues = [0, 5, 10, 15, 20, 30, 45, 75];
+rotateValues.forEach((value) => {
+rotateXUtilities[`.rotate-x-${value}`] = {
+'--tw-rotate-x': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateXUtilities[`.-rotate-x-${value}`] = {
+'--tw-rotate-x': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+};
+}
+});
+rotateValues.forEach((value) => {
+rotateYUtilities[`.rotate-y-${value}`] = {
+'--tw-rotate-y': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateYUtilities[`.-rotate-y-${value}`] = {
+'--tw-rotate-y': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+};
+}
+});
+rotateValues.forEach((value) => {
+rotateZUtilities[`.rotate-z-${value}`] = {
+'--tw-rotate-z': `${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+};
+if (value !== 0) {
+rotateZUtilities[`.-rotate-z-${value}`] = {
+'--tw-rotate-z': `-${value}deg`,
+transform: `
+translate3d(var(--tw-translate-x, 0), var(--tw-translate-y, 0), var(--tw-translate-z, 0))
+rotateX(var(--tw-rotate-x, 0))
+rotateY(var(--tw-rotate-y, 0))
+rotateZ(var(--tw-rotate-z, 0))
+skewX(var(--tw-skew-x, 0))
+skewY(var(--tw-skew-y, 0))
+scaleX(var(--tw-scale-x, 1))
+scaleY(var(--tw-scale-y, 1))
+`.replace(/\s+/g, ' ').trim(),
+};
+}
+});
+const perspectiveUtilities = {
+".perspective-none": { perspective: "none" },
+".perspective-dramatic": { perspective: "100px" },
+".perspective-near": { perspective: "300px" },
+".perspective-normal": { perspective: "500px" },
+".perspective-midrange": { perspective: "800px" },
+".perspective-distant": { perspective: "1200px" },
+};
+const transformStyleUtilities = {
+".transform-style-preserve-3d": { "transform-style": "preserve-3d" },
+".transform-style-flat": { "transform-style": "flat" },
+};
+addUtilities({
+...rotateXUtilities,
+...rotateYUtilities,
+...rotateZUtilities,
+...perspectiveUtilities,
+...transformStyleUtilities,
+});
+}
+]
+};
+</script>
+<style>
+.perspective-none { perspective: none !important; }
+.perspective-dramatic { perspective: 100px !important; }
+.perspective-near { perspective: 300px !important; }
+.perspective-normal { perspective: 500px !important; }
+.perspective-midrange { perspective: 800px !important; }
+.perspective-distant { perspective: 1200px !important; }
+.transform-style-preserve-3d { transform-style: preserve-3d !important; }
+.transform-style-flat { transform-style: flat !important; }
+</style>
+</head>
+<body class="bg-[#ebedea] text-[#2d322f] antialiased selection:bg-[#4ba3e3] selection:text-white overflow-x-hidden">
+
+<!-- Design System Navigation -->
+<nav class="ds-nav">
+<a href="#hero">Hero</a>
+<a href="#typography">Typography</a>
+<a href="#colors">Colors & Surfaces</a>
+<a href="#components">UI Components</a>
+<a href="#layout">Layout & Spacing</a>
+<a href="#motion">Motion & Interaction</a>
+<a href="#icons">Icons</a>
+</nav>
+
+<!-- SECTION 0: HERO (Exact Clone) -->
+<section id="hero" class="relative w-full min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden">
+<div class="absolute inset-0 z-0 bg-grid [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]"></div>
+<div class="flex flex-col text-center max-w-[1200px] z-10 mr-auto ml-auto pr-6 pl-6 relative items-center">
+<!-- Badge -->
+<div class="reveal delay-100 mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#4ba3e3]/20 bg-white/50 backdrop-blur-md text-sm tracking-widest uppercase text-[#2d322f]/80 shadow-sm">
+<span class="flex h-1.5 w-1.5 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ba3e3] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#4ba3e3]"></span>
+</span>
+Design System
+</div>
+<!-- Headline -->
+<h1 class="text-5xl md:text-7xl lg:text-8xl tracking-tight uppercase text-[#2d322f] font-playfair font-normal leading-[0.9] max-w-5xl">
+<span class="block reveal delay-200">The Complete</span>
+<span class="block reveal delay-300 bg-clip-text text-transparent bg-gradient-to-r from-[#2d322f] to-[#4ba3e3]">Visual Language</span>
+</h1>
+<!-- Subtitle -->
+<p class="reveal delay-400 mt-8 text-xl md:text-2xl text-[#2d322f]/60 font-playfair font-normal max-w-2xl leading-relaxed">
+Canonical components, patterns, and guidelines for building consistent digital experiences.
+</p>
+<!-- Actions -->
+<div class="reveal delay-500 mt-12 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+<button class="w-full sm:w-auto bg-[#2d322f] text-white rounded-full px-8 py-4 text-sm font-normal uppercase tracking-widest hover:bg-[#4ba3e3] hover:shadow-[0_8px_32px_rgba(75,163,227,0.3)] transition-all duration-300 flex items-center justify-center gap-2">
+Explore Components
+</button>
+<button class="w-full sm:w-auto bg-transparent border border-[#2d322f]/20 text-[#2d322f] rounded-full px-8 py-4 text-sm font-normal uppercase tracking-widest hover:border-[#4ba3e3]/50 hover:text-[#4ba3e3] transition-all duration-300 flex items-center justify-center gap-2">
+<iconify-icon class="text-lg" icon="solar:document-text-linear"></iconify-icon>
+View Guidelines
+</button>
+</div>
+<!-- Video Mockup Card - Parallax Effect -->
+<div class="reveal reveal-scale delay-500 mt-24 w-full max-w-4xl relative group cursor-pointer perspective-1000">
+<div class="absolute -inset-1 bg-gradient-to-b from-[#4ba3e3]/20 to-transparent rounded-3xl blur-2xl opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="relative w-full aspect-video rounded-2xl overflow-hidden border border-[#2d322f]/10 bg-[#1e2420] shadow-[0_20px_60px_-15px_rgba(45,50,47,0.3)] transform transition-transform duration-700 group-hover:-translate-y-2 group-hover:rotate-x-2">
+<img alt="Design System" class="w-full h-full object-cover opacity-80 mix-blend-luminosity group-hover:mix-blend-normal group-hover:scale-105 transition-all duration-1000" src="assets/photo-1551288049-bebda4e38f71_04ebf1842239.avif"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1e2420]/90 via-[#1e2420]/30 to-transparent pointer-events-none"></div>
+<div class="flex absolute top-0 right-0 bottom-0 left-0 items-center justify-center">
+<div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 text-white group-hover:bg-[#4ba3e3] group-hover:border-[#4ba3e3] group-hover:scale-110 transition-all duration-500 shadow-2xl">
+<iconify-icon class="text-2xl ml-0.5" icon="solar:document-text-linear"></iconify-icon>
+</div>
+</div>
+<div class="absolute bottom-8 left-8 text-left">
+<span class="text-white/70 text-sm tracking-widest uppercase mb-2 block">Design System v1.0</span>
+<span class="text-white tracking-tight text-2xl md:text-3xl font-playfair font-normal">Complete Component Library</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 1: TYPOGRAPHY -->
+<section id="typography" class="relative w-full bg-[#1e2420] py-32 overflow-hidden rounded-t-[3rem] -mt-10 z-20">
+<div class="absolute inset-0 z-0 bg-grid-dark [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] opacity-30"></div>
+<div class="relative z-10 max-w-[1400px] mx-auto px-6">
+<div class="reveal flex items-center justify-center gap-4 mb-16">
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+<span class="text-sm uppercase tracking-[0.3em] text-[#4ba3e3]">Typography</span>
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+</div>
+
+<table class="spec-table reveal">
+<thead>
+<tr>
+<th>Style Name</th>
+<th>Preview</th>
+<th>Specs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hero Heading</td>
+<td><span class="text-5xl md:text-7xl lg:text-8xl tracking-tight uppercase text-white font-playfair font-normal leading-[0.9]">How Trust is Built</span></td>
+<td>48px / 56px / 96px / 0.9</td>
+</tr>
+<tr>
+<td>Section Heading</td>
+<td><span class="text-5xl md:text-6xl lg:text-7xl tracking-tight uppercase text-white font-playfair font-normal leading-[0.9]">Built on Verifiable Signals</span></td>
+<td>48px / 60px / 72px / 0.9</td>
+</tr>
+<tr>
+<td>Parallax Heading</td>
+<td><span class="text-6xl md:text-8xl lg:text-9xl tracking-tight uppercase text-white font-playfair font-normal leading-[0.8]">Trust is Now A Competitive Signal</span></td>
+<td>60px / 96px / 128px / 0.8</td>
+</tr>
+<tr>
+<td>Heading 3</td>
+<td><span class="text-3xl tracking-tight uppercase text-white font-playfair font-normal">Disclosure</span></td>
+<td>30px / 1.25</td>
+</tr>
+<tr>
+<td>Heading 4</td>
+<td><span class="text-2xl tracking-tight uppercase text-white font-playfair font-normal">The AI Disclosure Dilemma</span></td>
+<td>24px / 1.25</td>
+</tr>
+<tr>
+<td>Subtitle Large</td>
+<td><span class="text-xl md:text-2xl text-white/60 font-playfair font-normal leading-relaxed">Navigate authenticity, disclosure, and reputation</span></td>
+<td>20px / 24px / 1.6</td>
+</tr>
+<tr>
+<td>Body Large</td>
+<td><span class="text-xl text-white/60 leading-relaxed font-playfair">We provide practical frameworks, rigorous teardowns, and actionable analyses</span></td>
+<td>20px / 1.6</td>
+</tr>
+<tr>
+<td>Body Base</td>
+<td><span class="text-base text-white/60 leading-relaxed">Evaluating how clearly creators and brands signal sponsored content</span></td>
+<td>16px / 1.6</td>
+</tr>
+<tr>
+<td>Label Small</td>
+<td><span class="text-sm uppercase tracking-widest text-white/70">Digital Trust Signals Journal</span></td>
+<td>14px / 0.2em</td>
+</tr>
+<tr>
+<td>Label Tiny</td>
+<td><span class="text-xs uppercase tracking-[0.2em] text-white/50">Editorial Standards</span></td>
+<td>12px / 0.2em</td>
+</tr>
+<tr>
+<td>Label Micro</td>
+<td><span class="text-xs uppercase tracking-[0.4em] text-[#4ba3e3]/80">The Weekly Brief</span></td>
+<td>12px / 0.4em</td>
+</tr>
+<tr>
+<td>Gradient Text</td>
+<td><span class="bg-clip-text text-transparent bg-gradient-to-r from-[#2d322f] to-[#4ba3e3]">Measured & Lost Online</span></td>
+<td>Gradient</td>
+</tr>
+<tr>
+<td>Gradient Light</td>
+<td><span class="bg-clip-text text-transparent bg-gradient-to-b from-[#4ba3e3] to-white/40">Competitive Signal</span></td>
+<td>Gradient</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- SECTION 2: COLORS & SURFACES -->
+<section id="colors" class="w-full bg-[#1e2420] px-6 pb-32">
+<div class="max-w-[1400px] mx-auto">
+<div class="reveal flex items-center justify-center gap-4 mb-16">
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+<span class="text-sm uppercase tracking-[0.3em] text-[#4ba3e3]">Colors & Surfaces</span>
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+<!-- Primary Colors -->
+<div class="space-y-4">
+<h3 class="text-sm uppercase tracking-widest text-white/70 mb-4">Primary</h3>
+<div class="color-swatch dark" style="background: #2d322f;">#2d322f</div>
+<div class="color-swatch dark" style="background: #1e2420;">#1e2420</div>
+<div class="color-swatch light" style="background: #ebedea;">#ebedea</div>
+<div class="color-swatch light" style="background: #f4f6f3;">#f4f6f3</div>
+</div>
+
+<!-- Accent Colors -->
+<div class="space-y-4">
+<h3 class="text-sm uppercase tracking-widest text-white/70 mb-4">Accent</h3>
+<div class="color-swatch dark" style="background: #4ba3e3;">#4ba3e3</div>
+<div class="color-swatch dark" style="background: linear-gradient(to right, #2d322f, #4ba3e3);">Gradient Primary</div>
+<div class="color-swatch dark" style="background: linear-gradient(to bottom, #4ba3e3, rgba(255,255,255,0.4));">Gradient Light</div>
+</div>
+
+<!-- Text Colors -->
+<div class="space-y-4">
+<h3 class="text-sm uppercase tracking-widest text-white/70 mb-4">Text</h3>
+<div class="color-swatch dark" style="background: #2d322f;">Primary #2d322f</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.9);">White 90%</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.7);">White 70%</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.6);">White 60%</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.5);">White 50%</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.4);">White 40%</div>
+</div>
+
+<!-- Surfaces -->
+<div class="space-y-4">
+<h3 class="text-sm uppercase tracking-widest text-white/70 mb-4">Surfaces</h3>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.05);">Glass 5%</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.1);">Glass 10%</div>
+<div class="color-swatch dark" style="background: rgba(45,50,47,0.05);">Grid Overlay</div>
+<div class="color-swatch dark" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Border 10%</div>
+</div>
+</div>
+
+<!-- Gradients Usage -->
+<div class="mt-16 reveal">
+<h3 class="text-sm uppercase tracking-widest text-white/70 mb-6">Gradient Usage</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="p-6 rounded-2xl bg-[#2d322f] border border-white/5">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-3">Text Gradient (Dark)</span>
+<span class="text-3xl font-playfair bg-clip-text text-transparent bg-gradient-to-r from-[#2d322f] to-[#4ba3e3]">Measured & Lost</span>
+</div>
+<div class="p-6 rounded-2xl bg-[#1e2420] border border-white/5">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-3">Text Gradient (Light)</span>
+<span class="text-3xl font-playfair bg-clip-text text-transparent bg-gradient-to-b from-[#4ba3e3] to-white/40">Competitive Signal</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 3: UI COMPONENTS -->
+<section id="components" class="bg-[#1e2420] border-y border-white/5 relative z-20">
+<div class="max-w-[1400px] mx-auto px-6 py-20 lg:py-32">
+<div class="reveal flex items-center justify-center gap-4 mb-16">
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+<span class="text-sm uppercase tracking-[0.3em] text-[#4ba3e3]">UI Components</span>
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+</div>
+
+<!-- Buttons -->
+<div class="mb-20 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Buttons</h3>
+<div class="space-y-8">
+<!-- Primary Button -->
+<div>
+<div class="state-label">Primary Button</div>
+<div class="component-states">
+<button class="bg-[#2d322f] text-white rounded-full px-8 py-4 text-sm font-normal uppercase tracking-widest hover:bg-[#4ba3e3] hover:shadow-[0_8px_32px_rgba(75,163,227,0.3)] transition-all duration-300 flex items-center justify-center gap-2">
+Default
+</button>
+<button class="bg-[#4ba3e3] text-white rounded-full px-8 py-4 text-sm font-normal uppercase tracking-widest shadow-[0_8px_32px_rgba(75,163,227,0.3)] flex items-center justify-center gap-2">
+Hover
+</button>
+</div>
+</div>
+
+<!-- Secondary Button -->
+<div>
+<div class="state-label">Secondary Button</div>
+<div class="component-states">
+<button class="bg-transparent border border-[#2d322f]/20 text-white rounded-full px-8 py-4 text-sm font-normal uppercase tracking-widest hover:border-[#4ba3e3]/50 hover:text-[#4ba3e3] transition-all duration-300 flex items-center justify-center gap-2">
+Default
+</button>
+<button class="bg-transparent border border-[#4ba3e3]/50 text-[#4ba3e3] rounded-full px-8 py-4 text-sm font-normal uppercase tracking-widest flex items-center justify-center gap-2">
+Hover
+</button>
+</div>
+</div>
+
+<!-- CTA Button -->
+<div>
+<div class="state-label">CTA Button</div>
+<div class="component-states">
+<button class="uppercase bg-[#2d322f] hover:bg-[#4ba3e3] hover:shadow-lg transition-all duration-300 flex text-xs md:text-sm font-normal text-white tracking-widest rounded-full px-5 py-2.5 gap-2 items-center">
+Book Audit
+<iconify-icon class="text-lg" icon="solar:clipboard-check-linear"></iconify-icon>
+</button>
+</div>
+</div>
+
+<!-- Icon Button -->
+<div>
+<div class="state-label">Icon Button</div>
+<div class="component-states">
+<button class="text-white hover:text-[#4ba3e3] transition-colors flex items-center justify-center">
+<iconify-icon class="text-xl" icon="solar:magnifer-linear"></iconify-icon>
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Badges & Pills -->
+<div class="mb-20 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Badges & Pills</h3>
+<div class="component-states">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#4ba3e3]/20 bg-white/50 backdrop-blur-md text-sm tracking-widest uppercase text-[#2d322f]/80 shadow-sm">
+<span class="flex h-1.5 w-1.5 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ba3e3] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#4ba3e3]"></span>
+</span>
+Live Badge
+</div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs tracking-widest uppercase text-white/70 font-medium">
+Static Badge
+</div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#4ba3e3]/30 bg-[#4ba3e3]/10 text-xs tracking-widest uppercase text-[#4ba3e3] font-medium">
+Accent Badge
+</div>
+</div>
+</div>
+
+<!-- Cards -->
+<div class="mb-20 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Cards</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="relative group overflow-hidden h-[300px] rounded-2xl bg-[#2d322f] border border-white/5 hover:border-[#4ba3e3]/30 transition-colors duration-500">
+<img alt="Card" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 mix-blend-luminosity transition-all duration-700 group-hover:scale-105" src="assets/photo-1611162617474-5b21e879e1_b47bbb483c04.avif"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#1e2420] via-[#1e2420]/50 to-transparent"></div>
+<div class="absolute inset-0 p-8 flex flex-col justify-end z-10">
+<div class="w-10 h-10 rounded-full bg-[#4ba3e3]/20 backdrop-blur-md flex items-center justify-center mb-6 border border-[#4ba3e3]/50 text-[#4ba3e3] group-hover:bg-[#4ba3e3] group-hover:text-white transition-all duration-500">
+<iconify-icon class="text-xl" icon="solar:user-speak-rounded-linear"></iconify-icon>
+</div>
+<h3 class="text-3xl text-white uppercase tracking-tight font-playfair font-normal mb-3">Card Title</h3>
+<p class="text-white/60 text-base leading-relaxed transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+Card description text that reveals on hover.
+</p>
+</div>
+</div>
+
+<!-- Card 2 -->
+<div class="flex flex-col bg-white rounded-2xl p-4 gap-6 border border-[#2d322f]/5 shadow-[0_8px_30px_rgba(45,50,47,0.04)] hover:shadow-[0_20px_40px_rgba(75,163,227,0.08)] hover:border-[#4ba3e3]/20 transition-all duration-500 group cursor-pointer">
+<div class="w-full aspect-square rounded-xl overflow-hidden relative">
+<img alt="Card" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" src="assets/photo-1550751827-4bd374c3f58b_c72fc70df88b.avif"/>
+<div class="absolute inset-0 bg-[#4ba3e3]/10 mix-blend-multiply"></div>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[#2d322f] text-xs uppercase tracking-widest px-2 py-1 rounded">Label</div>
+</div>
+<div class="flex flex-col justify-center py-2">
+<h3 class="text-2xl tracking-tight uppercase text-[#2d322f] font-playfair font-normal group-hover:text-[#4ba3e3] transition-colors">Card Heading</h3>
+<p class="text-base text-[#2d322f]/60 mt-2">Card description text with hover effect.</p>
+</div>
+</div>
+
+<!-- Card 3 -->
+<div class="bg-[#2d322f]/80 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)]">
+<div class="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
+<span class="text-white uppercase tracking-widest text-sm font-medium">Card Header</span>
+<span class="text-xs text-white/40 uppercase tracking-widest">v1.0</span>
+</div>
+<p class="text-white/60 text-base leading-relaxed">Glass morphism card with backdrop blur and subtle border.</p>
+</div>
+</div>
+</div>
+
+<!-- Form Elements -->
+<div class="mb-20 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Form Elements</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Input -->
+<div>
+<div class="state-label">Input Field</div>
+<input class="w-full bg-white/5 border border-white/10 text-white rounded-full px-8 py-4 text-sm focus:outline-none focus:border-[#4ba3e3] focus:bg-white/10 transition-all placeholder:text-white/40" placeholder="Enter your email" type="text"/>
+</div>
+
+<!-- Toggle -->
+<div>
+<div class="state-label">Toggle Switch</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<span class="text-white text-sm uppercase tracking-widest block">Toggle Label</span>
+<div class="w-12 h-6 rounded-full bg-[#4ba3e3] relative transition-colors shadow-inner flex items-center">
+<span class="absolute left-1 w-4 h-4 rounded-full bg-white transition-transform translate-x-6 shadow-sm"></span>
+</div>
+</div>
+</div>
+
+<!-- Range Slider -->
+<div>
+<div class="state-label">Range Slider</div>
+<div class="flex justify-between mb-3">
+<span class="text-white text-sm uppercase tracking-widest block">Slider Label</span>
+<span class="text-[#4ba3e3] text-sm font-medium uppercase tracking-widest">80%</span>
+</div>
+<input class="w-full appearance-none bg-transparent focus:outline-none" max="100" min="1" type="range" value="80"/>
+</div>
+
+<!-- Pills Select -->
+<div>
+<div class="state-label">Pills Select</div>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2.5 rounded-full border border-white/10 text-white/60 text-xs uppercase tracking-widest hover:border-white/30 transition-colors">Option 1</button>
+<button class="px-5 py-2.5 rounded-full border border-[#4ba3e3] bg-[#4ba3e3]/10 text-[#4ba3e3] text-xs uppercase tracking-widest transition-colors">Selected</button>
+<button class="px-5 py-2.5 rounded-full border border-white/10 text-white/60 text-xs uppercase tracking-widest hover:border-white/30 transition-colors">Option 3</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Links -->
+<div class="reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Links</h3>
+<div class="space-y-4">
+<a class="inline-flex items-center gap-2 text-[#4ba3e3] uppercase tracking-widest text-sm hover:text-white transition-colors group" href="#">
+Text Link
+<iconify-icon class="transform group-hover:translate-x-1 transition-transform" icon="solar:arrow-right-linear"></iconify-icon>
+</a>
+<a class="group relative inline-flex items-center gap-3 bg-transparent text-white text-sm font-medium uppercase tracking-widest pb-2 overflow-hidden hover:text-[#4ba3e3] transition-colors" href="#">
+<span class="relative z-10">Underline Link</span>
+<iconify-icon class="text-base relative z-10 transform group-hover:translate-x-1 transition-transform" icon="solar:arrow-right-linear"></iconify-icon>
+<span class="absolute bottom-0 left-0 w-full h-[2px] bg-[#4ba3e3] transform origin-left transition-transform group-hover:scale-x-100 scale-x-30"></span>
+</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 4: LAYOUT & SPACING -->
+<section id="layout" class="bg-[#ebedea] py-32 px-6 lg:px-12 rounded-t-[3rem] -mt-10 relative z-30">
+<div class="max-w-[1400px] mx-auto">
+<div class="reveal flex items-center justify-center gap-4 mb-16">
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+<span class="text-sm uppercase tracking-[0.3em] text-[#4ba3e3]">Layout & Spacing</span>
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+</div>
+
+<!-- Container Widths -->
+<div class="mb-16 reveal">
+<h3 class="text-2xl text-[#2d322f] uppercase tracking-tight font-playfair font-normal mb-8">Container Widths</h3>
+<div class="space-y-4">
+<div class="bg-white rounded-2xl p-6 border border-[#2d322f]/10">
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50 block mb-2">max-w-[1000px]</span>
+<div class="bg-[#2d322f]/10 rounded-lg h-16 mx-auto" style="max-width: 1000px;"></div>
+</div>
+<div class="bg-white rounded-2xl p-6 border border-[#2d322f]/10">
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50 block mb-2">max-w-[1200px]</span>
+<div class="bg-[#2d322f]/10 rounded-lg h-16 mx-auto" style="max-width: 1200px;"></div>
+</div>
+<div class="bg-white rounded-2xl p-6 border border-[#2d322f]/10">
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50 block mb-2">max-w-[1400px]</span>
+<div class="bg-[#2d322f]/10 rounded-lg h-16 mx-auto" style="max-width: 1400px;"></div>
+</div>
+</div>
+</div>
+
+<!-- Grid Systems -->
+<div class="mb-16 reveal">
+<h3 class="text-2xl text-[#2d322f] uppercase tracking-tight font-playfair font-normal mb-8">Grid Systems</h3>
+<div class="space-y-8">
+<div>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50 block mb-4">grid-cols-1 md:grid-cols-2 lg:grid-cols-4</span>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-[#2d322f] rounded-xl h-32 flex items-center justify-center text-white/50 text-xs uppercase tracking-widest">1</div>
+<div class="bg-[#2d322f] rounded-xl h-32 flex items-center justify-center text-white/50 text-xs uppercase tracking-widest">2</div>
+<div class="bg-[#2d322f] rounded-xl h-32 flex items-center justify-center text-white/50 text-xs uppercase tracking-widest">3</div>
+<div class="bg-[#2d322f] rounded-xl h-32 flex items-center justify-center text-white/50 text-xs uppercase tracking-widest">4</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Section Padding -->
+<div class="mb-16 reveal">
+<h3 class="text-2xl text-[#2d322f] uppercase tracking-tight font-playfair font-normal mb-8">Section Padding</h3>
+<div class="space-y-4">
+<div class="bg-[#1e2420] rounded-2xl p-8">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-2">py-20 (80px)</span>
+<div class="bg-white/10 rounded-lg h-12"></div>
+</div>
+<div class="bg-[#1e2420] rounded-2xl p-8">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-2">py-32 (128px)</span>
+<div class="bg-white/10 rounded-lg h-12"></div>
+</div>
+</div>
+</div>
+
+<!-- Layout Patterns -->
+<div class="reveal">
+<h3 class="text-2xl text-[#2d322f] uppercase tracking-tight font-playfair font-normal mb-8">Layout Patterns</h3>
+<div class="space-y-8">
+<!-- Split Layout -->
+<div class="bg-white rounded-2xl p-8 border border-[#2d322f]/10">
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50 block mb-4">Split Layout (lg:flex-row)</span>
+<div class="flex flex-col lg:flex-row gap-8 items-center">
+<div class="lg:w-1/2 bg-[#2d322f]/10 rounded-xl h-32 flex items-center justify-center text-[#2d322f]/50 text-xs uppercase tracking-widest">Left Content</div>
+<div class="lg:w-1/2 bg-[#2d322f]/10 rounded-xl h-32 flex items-center justify-center text-[#2d322f]/50 text-xs uppercase tracking-widest">Right Content</div>
+</div>
+</div>
+
+<!-- Centered Layout -->
+<div class="bg-white rounded-2xl p-8 border border-[#2d322f]/10">
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50 block mb-4">Centered Layout</span>
+<div class="flex flex-col text-center max-w-[600px] mx-auto">
+<div class="bg-[#2d322f]/10 rounded-xl h-24 flex items-center justify-center text-[#2d322f]/50 text-xs uppercase tracking-widest mb-4">Centered Content</div>
+<div class="bg-[#2d322f]/10 rounded-xl h-16 flex items-center justify-center text-[#2d322f]/50 text-xs uppercase tracking-widest">Subtitle</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 5: MOTION & INTERACTION -->
+<section id="motion" class="relative w-full bg-[#1e2420] py-32 overflow-hidden rounded-t-[3rem] -mt-10 z-20">
+<div class="absolute inset-0 z-0 bg-grid-dark [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] opacity-30"></div>
+<div class="relative z-10 max-w-[1400px] mx-auto px-6">
+<div class="reveal flex items-center justify-center gap-4 mb-16">
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+<span class="text-sm uppercase tracking-[0.3em] text-[#4ba3e3]">Motion & Interaction</span>
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+</div>
+
+<!-- Motion Gallery -->
+<div class="motion-gallery reveal">
+<div class="motion-item">
+<div class="reveal w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Reveal (Fade Up)</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal reveal-scale w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Reveal Scale</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal reveal-left w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Reveal Left</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal reveal-right w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Reveal Right</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal delay-100 w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Delay 100ms</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal delay-200 w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Delay 200ms</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal delay-300 w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Delay 300ms</div>
+</div>
+
+<div class="motion-item">
+<div class="reveal delay-500 w-16 h-16 rounded-full bg-[#4ba3e3] flex items-center justify-center text-white">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+</div>
+<div class="label">Delay 500ms</div>
+</div>
+</div>
+
+<!-- Hover Effects -->
+<div class="mt-16 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Hover Effects</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 hover:border-[#4ba3e3]/30 transition-colors duration-500 p-8 text-center">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Border Color</span>
+<div class="w-12 h-12 rounded-full bg-white/10 mx-auto group-hover:bg-[#4ba3e3] transition-colors duration-500"></div>
+</div>
+
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 p-8 text-center">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Scale Up</span>
+<div class="w-12 h-12 rounded-full bg-white/10 mx-auto group-hover:scale-110 transition-transform duration-500"></div>
+</div>
+
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 p-8 text-center">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Translate Y</span>
+<div class="w-12 h-12 rounded-full bg-white/10 mx-auto group-hover:-translate-y-2 transition-transform duration-500"></div>
+</div>
+
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 p-8 text-center">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Shadow Glow</span>
+<div class="w-12 h-12 rounded-full bg-white/10 mx-auto group-hover:shadow-[0_0_30px_rgba(75,163,227,0.5)] transition-shadow duration-500"></div>
+</div>
+</div>
+</div>
+
+<!-- 3D Transforms -->
+<div class="mt-16 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">3D Transforms</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="perspective-normal">
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 p-8 text-center transform transition-transform duration-700 hover:-translate-y-2 hover:rotate-y-2">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Rotate Y</span>
+<div class="w-12 h-12 rounded-full bg-[#4ba3e3] mx-auto"></div>
+</div>
+</div>
+
+<div class="perspective-normal">
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 p-8 text-center transform transition-transform duration-700 hover:-translate-y-2 hover:rotate-x-2">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Rotate X</span>
+<div class="w-12 h-12 rounded-full bg-[#4ba3e3] mx-auto"></div>
+</div>
+</div>
+
+<div class="perspective-1000">
+<div class="group relative overflow-hidden rounded-2xl bg-[#2d322f] border border-white/5 p-8 text-center transform transition-transform duration-700 hover:-translate-y-2 hover:rotate-x-2 hover:rotate-y-2">
+<span class="text-xs uppercase tracking-widest text-white/50 block mb-4">Combined</span>
+<div class="w-12 h-12 rounded-full bg-[#4ba3e3] mx-auto"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Animation Timing -->
+<div class="mt-16 reveal">
+<h3 class="text-2xl text-white uppercase tracking-tight font-playfair font-normal mb-8">Animation Timing</h3>
+<div class="bg-[#2d322f]/50 rounded-2xl p-6 border border-white/10">
+<table class="spec-table">
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transition Duration</td>
+<td>300ms, 500ms, 700ms, 1000ms</td>
+</tr>
+<tr>
+<td>Easing</td>
+<td>cubic-bezier(0.16, 1, 0.3, 1)</td>
+</tr>
+<tr>
+<td>Stagger Delays</td>
+<td>100ms, 200ms, 300ms, 400ms, 500ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 6: ICONS -->
+<section id="icons" class="bg-[#ebedea] py-32 px-6 rounded-t-[3rem] -mt-10 relative z-30">
+<div class="max-w-[1400px] mx-auto">
+<div class="reveal flex items-center justify-center gap-4 mb-16">
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+<span class="text-sm uppercase tracking-[0.3em] text-[#4ba3e3]">Icons</span>
+<span class="h-px w-12 bg-[#4ba3e3]"></span>
+</div>
+
+<div class="reveal">
+<p class="text-[#2d322f]/60 text-base mb-8 max-w-2xl">
+Icons use the Iconify system with Solar icon set. Stroke width is set to 1.5 for consistent visual weight.
+</p>
+
+<div class="icon-grid">
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:magnifer-linear"></iconify-icon>
+<span class="label">magnifer</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:clipboard-check-linear"></iconify-icon>
+<span class="label">clipboard-check</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:calculator-linear"></iconify-icon>
+<span class="label">calculator</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+<span class="label">document-text</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:user-speak-rounded-linear"></iconify-icon>
+<span class="label">user-speak</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:magic-stick-3-linear"></iconify-icon>
+<span class="label">magic-stick</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:star-fall-minimalistic-linear"></iconify-icon>
+<span class="label">star-fall</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:shield-check-linear"></iconify-icon>
+<span class="label">shield-check</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:arrow-right-linear"></iconify-icon>
+<span class="label">arrow-right</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:refresh-circle-linear"></iconify-icon>
+<span class="label">refresh-circle</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:pen-new-square-linear"></iconify-icon>
+<span class="label">pen-new-square</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:brand-twitter-linear"></iconify-icon>
+<span class="label">brand-twitter</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:brand-linkedin-linear"></iconify-icon>
+<span class="label">brand-linkedin</span>
+</div>
+<div class="icon-item">
+<iconify-icon class="text-2xl" icon="solar:letter-linear"></iconify-icon>
+<span class="label">letter</span>
+</div>
+</div>
+</div>
+
+<!-- Icon Sizes -->
+<div class="mt-16 reveal">
+<h3 class="text-2xl text-[#2d322f] uppercase tracking-tight font-playfair font-normal mb-8">Icon Sizes</h3>
+<div class="flex items-center gap-8">
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-lg" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">text-lg</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-xl" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">text-xl</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-2xl" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">text-2xl</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-3xl" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">text-3xl</span>
+</div>
+</div>
+</div>
+
+<!-- Icon Colors -->
+<div class="mt-16 reveal">
+<h3 class="text-2xl text-[#2d322f] uppercase tracking-tight font-playfair font-normal mb-8">Icon Colors</h3>
+<div class="flex items-center gap-8">
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-2xl text-[#2d322f]" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">Primary</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-2xl text-[#4ba3e3]" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">Accent</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-2xl text-white" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">White</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<iconify-icon class="text-2xl text-[#2d322f]/60" icon="solar:document-text-linear"></iconify-icon>
+<span class="text-xs uppercase tracking-widest text-[#2d322f]/50">Muted</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-[#1e2420] text-white pt-20 pb-10 border-t border-white/5">
+<div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+<div class="text-center">
+<h3 class="text-3xl tracking-tight uppercase text-white mb-4 font-playfair font-normal">
+TRST.
+</h3>
+<p class="text-base text-white/50 mb-8 max-w-sm mx-auto leading-relaxed">
+Design System v1.0 — Extracted from the Digital Trust Signals Journal.
+</p>
+<p class="text-xs text-white/30 uppercase tracking-[0.2em]">
+© 2024 TRST Digital Trust Signals Journal. All rights reserved.
+</p>
+</div>
+</div>
+</footer>
+
+<!-- Initialization Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+// Intersection Observer for Scroll Reveals
+const observerOptions = {
+root: null,
+rootMargin: '0px',
+threshold: 0.15
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+entries.forEach(entry => {
+if (entry.isIntersecting) {
+entry.target.classList.add('in-view');
+}
+});
+}, observerOptions);
+
+document.querySelectorAll('.reveal').forEach(el => {
+observer.observe(el);
+});
+
+// Active Nav Link on Scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.ds-nav a');
+
+window.addEventListener('scroll', () => {
+let current = '';
+sections.forEach(section => {
+const sectionTop = section.offsetTop;
+const sectionHeight = section.clientHeight;
+if (scrollY >= sectionTop - 200) {
+current = section.getAttribute('id');
+}
+});
+
+navLinks.forEach(link => {
+link.classList.remove('active');
+if (link.getAttribute('href') === `#${current}`) {
+link.classList.add('active');
+}
+});
+});
+});
+</script>
+</body>
+</html>

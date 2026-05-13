@@ -2,51 +2,74 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Calendar, Coffee, LogIn, LogOut, ArrowUpRight, ArrowDownLeft, Sunset } from "lucide-react";
+import {
+  Calendar,
+  Coffee,
+  LogIn,
+  LogOut,
+  ArrowUpRight,
+  ArrowDownLeft,
+  Sunset,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { DotmCircular14 } from "@/components/ui/dotm-circular-14";
 
 type TimeType = "work_start" | "lunch_start" | "lunch_end" | "work_end";
 
 function calculateDailyHours(records: any[]): string {
+  if (!records || records.length === 0) return "0h 0m";
+
   let totalMs = 0;
   let lastEntry = null;
-  
+
   const sorted = [...records].sort((a, b) => a.timestamp - b.timestamp);
-  
+
   for (const record of sorted) {
     if (record.type === "work_start") {
       lastEntry = record.timestamp;
-    } else if (record.type === "work_end" && lastEntry) {
+      continue;
+    }
+    if (record.type === "work_end" && lastEntry) {
       totalMs += record.timestamp - lastEntry;
       lastEntry = null;
     }
   }
-  
+
   const hours = Math.floor(totalMs / 3600000);
   const minutes = Math.floor((totalMs % 3600000) / 60000);
   return `${hours}h ${minutes}m`;
 }
 
 function calculateWeeklyTotal(recordsByDate: any[]) {
+  if (!recordsByDate || recordsByDate.length === 0) return "0h 0m";
+
   let totalMs = 0;
-  
+
   for (const dayGroup of recordsByDate) {
-    const sorted = [...dayGroup.records].sort((a, b) => a.timestamp - b.timestamp);
+    if (!dayGroup.records || dayGroup.records.length === 0) continue;
+
+    const sorted = [...dayGroup.records].sort(
+      (a, b) => a.timestamp - b.timestamp,
+    );
     let lastEntry = null;
-    
+
     for (const record of sorted) {
       if (record.type === "work_start") {
         lastEntry = record.timestamp;
-      } else if (record.type === "work_end" && lastEntry) {
+        continue;
+      }
+      if (record.type === "work_end" && lastEntry) {
         totalMs += record.timestamp - lastEntry;
         lastEntry = null;
       }
     }
   }
-  
+
   const hours = Math.floor(totalMs / 3600000);
   const minutes = Math.floor((totalMs % 3600000) / 60000);
   return `${hours}h ${minutes}m`;
@@ -63,11 +86,14 @@ function calculateOvertime(weeklyHours: number) {
 }
 
 function page() {
+  const router = useRouter();
   const myTimeRecords = useQuery(api.timeRecords.myTimeRecords, { limit: 30 });
   const currentUser = useQuery(api.employees.currentUser);
 
-  const weeklyTotal = myTimeRecords ? calculateWeeklyTotal(myTimeRecords) : "0h 0m";
-  const weeklyHoursNum = myTimeRecords 
+  const weeklyTotal = myTimeRecords
+    ? calculateWeeklyTotal(myTimeRecords)
+    : "0h 0m";
+  const weeklyHoursNum = myTimeRecords
     ? myTimeRecords.reduce((acc: number, day: any) => {
         const hours = calculateDailyHours(day.records).replace("h", "").trim();
         return acc + parseFloat(hours || "0");
@@ -77,8 +103,15 @@ function page() {
 
   if (!currentUser) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="w-full h-screen grid place-items-center">
+        <DotmCircular14
+          size={32}
+          dotSize={4}
+          speed={1.4}
+          opacityBase={0.1}
+          opacityMid={0.4}
+          opacityPeak={0.95}
+        />
       </div>
     );
   }
@@ -130,13 +163,24 @@ function page() {
             {myTimeRecords && myTimeRecords.length > 0 ? (
               myTimeRecords.map((dayGroup: any) => {
                 const dailyHours = calculateDailyHours(dayGroup.records);
-                const dayOfWeek = format(new Date(dayGroup.date), "EEEEEE", { locale: ptBR });
-                const dayNumber = format(new Date(dayGroup.date), "d");
-                
-                const workStart = dayGroup.records.find((r: any) => r.type === "work_start");
-                const workEnd = dayGroup.records.find((r: any) => r.type === "work_end");
-                const lunchStart = dayGroup.records.find((r: any) => r.type === "lunch_start");
-                const lunchEnd = dayGroup.records.find((r: any) => r.type === "lunch_end");
+                const dayOfWeek = format(parseISO(dayGroup.date), "EEEEEE", {
+                  locale: ptBR,
+                });
+                const dayNumber = format(parseISO(dayGroup.date), "d");
+                const detailsRecordId = dayGroup.records[0]?._id;
+
+                const workStart = dayGroup.records.find(
+                  (r: any) => r.type === "work_start",
+                );
+                const workEnd = dayGroup.records.find(
+                  (r: any) => r.type === "work_end",
+                );
+                const lunchStart = dayGroup.records.find(
+                  (r: any) => r.type === "lunch_start",
+                );
+                const lunchEnd = dayGroup.records.find(
+                  (r: any) => r.type === "lunch_end",
+                );
 
                 return (
                   <section key={dayGroup.date}>
@@ -160,18 +204,26 @@ function page() {
                           <div className="flex items-center gap-2">
                             <LogIn />
                             <span className="font-bold text-on-surface">
-                              {workStart ? format(new Date(workStart.timestamp), "HH:mm") : "--:--"}
+                              {workStart
+                                ? format(new Date(workStart.timestamp), "HH:mm")
+                                : "--:--"}
                             </span>
                           </div>
                         </div>
-                        <div className={cn(
-                          "text-center px-3 py-1 rounded-full",
-                          dayGroup.records.some((r: any) => r.status === "approved") 
-                            ? "bg-emerald-500" 
-                            : dayGroup.records.some((r: any) => r.status === "rejected")
-                              ? "bg-red-500"
-                              : "bg-amber-500"
-                        )}>
+                        <div
+                          className={cn(
+                            "text-center px-3 py-1 rounded-full",
+                            dayGroup.records.some(
+                              (r: any) => r.status === "approved",
+                            )
+                              ? "bg-emerald-500"
+                              : dayGroup.records.some(
+                                    (r: any) => r.status === "rejected",
+                                  )
+                                ? "bg-red-500"
+                                : "bg-amber-500",
+                          )}
+                        >
                           <span className="text-sm font-bold text-white">
                             {dailyHours}
                           </span>
@@ -182,7 +234,9 @@ function page() {
                           </span>
                           <div className="flex items-center gap-2 justify-end">
                             <span className="font-bold text-on-surface">
-                              {workEnd ? format(new Date(workEnd.timestamp), "HH:mm") : "--:--"}
+                              {workEnd
+                                ? format(new Date(workEnd.timestamp), "HH:mm")
+                                : "--:--"}
                             </span>
                             <LogOut />
                           </div>
@@ -197,17 +251,44 @@ function page() {
                                 Parada
                               </span>
                               <span className="text-xs font-semibold text-on-surface">
-                                {lunchStart ? format(new Date(lunchStart.timestamp), "HH:mm") : "--:--"} - {lunchEnd ? format(new Date(lunchEnd.timestamp), "HH:mm") : "--:--"}
+                                {lunchStart
+                                  ? format(
+                                      new Date(lunchStart.timestamp),
+                                      "HH:mm",
+                                    )
+                                  : "--:--"}{" "}
+                                -{" "}
+                                {lunchEnd
+                                  ? format(
+                                      new Date(lunchEnd.timestamp),
+                                      "HH:mm",
+                                    )
+                                  : "--:--"}
                               </span>
                             </div>
                           </div>
                           {lunchStart && lunchEnd && (
                             <span className="text-xs font-bold text-on-surface-variant">
-                              {Math.round((lunchEnd.timestamp - lunchStart.timestamp) / 60000)}m
+                              {Math.round(
+                                (lunchEnd.timestamp - lunchStart.timestamp) /
+                                  60000,
+                              )}
+                              m
                             </span>
                           )}
                         </div>
                       )}
+
+                      <Button
+                        disabled={!detailsRecordId}
+                        onClick={() => {
+                          if (!detailsRecordId) return;
+                          router.push(`/dashboard/revisoes/${detailsRecordId}`);
+                        }}
+                        className="w-full rounded-lg"
+                      >
+                        Ver detalhes
+                      </Button>
                     </div>
                   </section>
                 );
