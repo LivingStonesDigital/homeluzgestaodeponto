@@ -79,7 +79,7 @@ function isNavItemActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function BottomBar() {
+export default function BottomBar({ ...props }: React.ComponentProps<"nav">) {
   const pathname = usePathname();
   const currentUser = useQuery(api.employees.currentUser);
   const role = currentUser?.role;
