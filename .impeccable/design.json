@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-09T16:45:00.000Z",
+  "title": "Design System: HomeLuz",
+  "extensions": {
+    "colorMeta": {
+      "brand-navy": {
+        "role": "primary",
+        "displayName": "Brand Navy",
+        "canonical": "oklch(15% 0.08 280)",
+        "tonalRamp": ["oklch(12% 0.06 280)", "oklch(20% 0.09 280)", "oklch(28% 0.10 280)", "oklch(36% 0.09 280)", "oklch(45% 0.08 280)", "oklch(55% 0.07 280)", "oklch(70% 0.05 280)", "oklch(88% 0.03 280)"]
+      },
+      "primary-container": {
+        "role": "primary",
+        "displayName": "Deep Indigo Night",
+        "canonical": "oklch(28% 0.10 280)",
+        "tonalRamp": ["oklch(15% 0.08 280)", "oklch(22% 0.10 280)", "oklch(28% 0.10 280)", "oklch(36% 0.09 280)", "oklch(45% 0.08 280)", "oklch(55% 0.07 280)", "oklch(70% 0.05 280)", "oklch(88% 0.03 280)"]
+      },
+      "gold-accent": {
+        "role": "tertiary",
+        "displayName": "Warm Gold",
+        "canonical": "oklch(72% 0.12 85)",
+        "tonalRamp": ["oklch(30% 0.08 85)", "oklch(40% 0.10 85)", "oklch(50% 0.11 85)", "oklch(60% 0.12 85)", "oklch(72% 0.12 85)", "oklch(80% 0.10 85)", "oklch(88% 0.07 85)", "oklch(95% 0.03 85)"]
+      },
+      "surface-bright": {
+        "role": "neutral",
+        "displayName": "Warm Off-White",
+        "canonical": "oklch(97% 0.005 85)",
+        "tonalRamp": ["oklch(15% 0.003 85)", "oklch(30% 0.003 85)", "oklch(50% 0.004 85)", "oklch(70% 0.004 85)", "oklch(85% 0.005 85)", "oklch(92% 0.005 85)", "oklch(97% 0.005 85)", "oklch(99% 0.003 85)"]
+      },
+      "on-surface": {
+        "role": "neutral",
+        "displayName": "Almost Black",
+        "canonical": "oklch(15% 0.003 85)",
+        "tonalRamp": ["oklch(10% 0.002 85)", "oklch(15% 0.003 85)", "oklch(25% 0.003 85)", "oklch(40% 0.004 85)", "oklch(55% 0.004 85)", "oklch(70% 0.004 85)", "oklch(85% 0.005 85)", "oklch(95% 0.003 85)"]
+      },
+      "interactive-blue": {
+        "role": "secondary",
+        "displayName": "Blue-500",
+        "canonical": "oklch(62% 0.18 255)",
+        "tonalRamp": ["oklch(25% 0.12 255)", "oklch(35% 0.15 255)", "oklch(45% 0.17 255)", "oklch(55% 0.18 255)", "oklch(62% 0.18 255)", "oklch(72% 0.15 255)", "oklch(82% 0.10 255)", "oklch(92% 0.05 255)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Greeting headlines on the dashboard. One per screen." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles and card headings." },
+      "title": { "displayName": "Title", "purpose": "Subsection headers, navigation labels." },
+      "body": { "displayName": "Body", "purpose": "All reading content. Capped at 65-75ch." },
+      "label": { "displayName": "Label", "purpose": "Button text, form labels, stats, metadata." }
+    },
+    "shadows": [
+      { "name": "interactive-hover", "value": "0 4px 24px rgba(0,0,0,0.12)", "purpose": "Soft diffused shadow on hovered interactive elements." },
+      { "name": "focus-ring", "value": "0 0 0 3px var(--ring, oklch(0.708 0 0))/50%", "purpose": "Focus-visible ring on inputs and buttons." }
+    ],
+    "motion": [
+      { "name": "ease-state", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Standard easing for state transitions (hover, focus, active)." },
+      { "name": "duration-state", "value": "150ms", "purpose": "Duration for hover and focus transitions." },
+      { "name": "duration-view-transition-exit", "value": "150ms", "purpose": "View transition exit duration." },
+      { "name": "duration-view-transition-enter", "value": "210ms", "purpose": "View transition enter duration." },
+      { "name": "duration-view-transition-move", "value": "400ms", "purpose": "View transition shared element morph duration." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Standard primary action button. Pill-shaped with blue background.",
+      "html": "<button class=\"ds-btn-primary\">Bater Ponto</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 12px 24px; gap: 6px; border-radius: 32px; border: 1px solid transparent; background: #3b82f6; color: #ffffff; font-family: Inter, sans-serif; font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1), transform 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #2563eb; } .ds-btn-primary:focus-visible { outline: none; border-color: oklch(0.708 0 0); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 50%); } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:disabled { opacity: 0.5; pointer-events: none; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Ghost variant for secondary actions. Transparent until hovered.",
+      "html": "<button class=\"ds-btn-ghost\">Cancelar</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; height: 36px; padding: 8px 16px; gap: 6px; border-radius: 32px; border: none; background: transparent; color: #191c1d; font-family: Inter, sans-serif; font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-ghost:hover { background: oklch(0.97 0 0); } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.708 0 0 / 50%); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Standard text input with pill shape and focus ring.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Nome do funcionário\">",
+      "css": ".ds-input { height: 36px; width: 100%; min-width: 0; padding: 8px 12px; border-radius: 32px; border: 1px solid oklch(0.922 0 0); background: rgba(0,0,0,0.03); color: #191c1d; font-family: Inter, sans-serif; font-size: 14px; line-height: 1.5; transition: border-color 150ms cubic-bezier(0.4,0,0.2,1); outline: none; } .ds-input::placeholder { color: oklch(0.556 0 0); } .ds-input:focus-visible { border-color: oklch(0.708 0 0); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 50%); } .ds-input:disabled { opacity: 0.5; pointer-events: none; cursor: not-allowed; } .ds-input[aria-invalid=true] { border-color: oklch(0.577 0.245 27.325); box-shadow: 0 0 0 3px oklch(0.577 0.245 27.325 / 20%); }"
+    },
+    {
+      "name": "Standard Card",
+      "kind": "card",
+      "refersTo": "card-default",
+      "description": "Standard content card with rounded corners and optional ring border.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-header\"><div class=\"ds-card-title\">Horas Trabalhadas</div><div class=\"ds-card-description\">Registro de hoje</div></div><div class=\"ds-card-content\"><p style=\"font-size: 1.875rem; font-weight: 800; font-family: Manrope, sans-serif; margin: 0;\">08:24</p></div></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 24px; padding: 24px; border-radius: 16px; background: #ffffff; color: #191c1d; box-shadow: 0 1px 3px rgba(0,0,0,0.06); font-family: Inter, sans-serif; font-size: 14px; } .ds-card-header { display: grid; gap: 8px; } .ds-card-title { font-family: Manrope, sans-serif; font-size: 16px; font-weight: 600; } .ds-card-description { font-size: 14px; color: oklch(0.556 0 0); } .ds-card-content { padding: 0; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge-default",
+      "description": "Compact pill badge for status indicators and labels.",
+      "html": "<span class=\"ds-badge\">Aprovado</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; height: 20px; padding: 2px 8px; gap: 4px; border-radius: 32px; border: 1px solid transparent; background: #000666; color: #ffffff; font-family: Inter, sans-serif; font-size: 12px; font-weight: 500; white-space: nowrap; } .ds-badge[data-variant=secondary] { background: oklch(0.97 0 0); color: oklch(0.205 0 0); } .ds-badge[data-variant=destructive] { background: oklch(0.577 0.245 27.325 / 10%); color: oklch(0.577 0.245 27.325); } .ds-badge[data-variant=outline] { background: transparent; border-color: oklch(0.922 0 0); color: #191c1d; }"
+    },
+    {
+      "name": "Dialog",
+      "kind": "custom",
+      "refersTo": "dialog-default",
+      "description": "Modal dialog with pill-shaped content panel and backdrop overlay.",
+      "html": "<div class=\"ds-dialog-overlay\"><div class=\"ds-dialog-panel\"><div class=\"ds-dialog-header\"><div class=\"ds-dialog-title\">Confirmar ação</div><div class=\"ds-dialog-description\">Esta ação não pode ser desfeita.</div></div><div class=\"ds-dialog-footer\"><button class=\"ds-btn-ghost\" style=\"flex:1\">Cancelar</button><button class=\"ds-btn-primary\" style=\"flex:1\">Confirmar</button></div></div></div>",
+      "css": ".ds-dialog-overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); } .ds-dialog-panel { width: 100%; max-width: 448px; margin: 0 16px; padding: 24px; border-radius: 32px; background: oklch(1 0 0); color: oklch(0.145 0 0); box-shadow: 0 0 0 1px rgba(0,0,0,0.05); font-family: Inter, sans-serif; font-size: 14px; display: grid; gap: 24px; } .ds-dialog-header { display: flex; flex-direction: column; gap: 8px; } .ds-dialog-title { font-family: Manrope, sans-serif; font-size: 16px; font-weight: 600; } .ds-dialog-description { font-size: 14px; color: oklch(0.556 0 0); } .ds-dialog-footer { display: flex; flex-direction: row; gap: 8px; }"
+    },
+    {
+      "name": "Nav Sidebar Item",
+      "kind": "nav",
+      "refersTo": "nav-sidebar",
+      "description": "Sidebar navigation item. Active state uses brand navy background.",
+      "html": "<nav class=\"ds-nav-group\"><div class=\"ds-nav-label\">Gestão de ponto</div><a class=\"ds-nav-item\" href=\"#\">Bater ponto</a><a class=\"ds-nav-item ds-nav-item-active\" href=\"#\">Aprovações</a><a class=\"ds-nav-item\" href=\"#\">Histórico</a></nav>",
+      "css": ".ds-nav-group { margin-bottom: 16px; } .ds-nav-label { padding: 8px 12px; font-family: Inter, sans-serif; font-size: 12px; font-weight: 500; color: oklch(0.556 0 0); text-transform: uppercase; letter-spacing: 0.05em; } .ds-nav-item { display: flex; align-items: center; padding: 8px 12px; border-radius: 8px; color: #191c1d; font-family: Inter, sans-serif; font-size: 14px; font-weight: 500; text-decoration: none; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-nav-item:hover { background: oklch(0.97 0 0); } .ds-nav-item-active { background: #000666; color: #ffffff; } .ds-nav-item-active:hover { background: #1a237e; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Confirmed Minute",
+    "overview": "HomeLuz is a timekeeping tool that earns trust through quiet precision. The interface is professional without being cold, warm without being playful. Every element communicates reliability: pill-shaped controls invite a tap, deep indigo anchors the brand as a mark of seriousness, and generous white space gives the data room to breathe. The system explicitly rejects gamification, cartoonish illustrations, and the dense corporate aesthetic of legacy HR portals. It takes cues from Brazilian fintech: approachable, mobile-first, human. The warmth comes from the gold accent in the brand mark and the rounded tactility of every touch target, not from decorative excess.",
+    "keyCharacteristics": [
+      "Pill-shaped interactive controls (32px corner radius on buttons, inputs, badges)",
+      "Deep indigo as the single brand accent, used sparingly for container backgrounds and the app shell",
+      "Warm neutrals on surface tones — never pure #fff or #000",
+      "Mobile-first rhythm: generous tap targets, stackable layouts, bottom-navigation primary",
+      "Typographic hierarchy driven by weight contrast: Manrope ExtraBold headlines over Inter Regular body"
+    ],
+    "rules": [
+      { "name": "The One Weight Rule", "body": "Hierarchy comes from weight and size, not color or decoration. Body is Regular 400; anything important goes to Semibold 600 or Bold 700. No gradient text, no italic for emphasis.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Shadows appear only as a response to state (hover, focus, active). A card with a permanent shadow is a card that looks interactive when it is not.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use the deep indigo sparingly — it marks important surfaces (welcome card, active nav). Overuse dilutes its weight.",
+      "Do use pill-shaped controls for all interactive elements (buttons, inputs, badges, dialogs). The capsule shape signals \"touch me.\"",
+      "Do keep cards flat at rest. Only elevate on hover to indicate interactivity.",
+      "Do use warm off-white (#f8f9fa) as the main surface color. Pure white is reserved for card interiors.",
+      "Do use Manrope for all headings and Inter for body text. The pairing is intentional.",
+      "Do use weight and size for hierarchy. Never use gradient text, colored text (outside links), or italic for emphasis.",
+      "Do use the gold accent exclusively in the brand logo. Gold in the UI would read as gamification."
+    ],
+    "donts": [
+      "Don't gamify the interface — no achievement badges, progress celebrations, bouncing illustrations, or confetti. This is a serious tool.",
+      "Don't use side-stripe borders (border-left or border-right >1px as a colored accent on cards or list items). Use full borders, background tints, or nothing.",
+      "Don't use glassmorphism or backdrop-blur as a default decorative treatment. The only blur is the modal overlay background.",
+      "Don't show identical card grids with icon + heading + text repeated endlessly. Vary card sizes and content layouts.",
+      "Don't use the hero-metric template (big number, small label, gradient accent) — the SaaS cliché that makes every dashboard look the same.",
+      "Don't open a modal as the default interaction for primary tasks. Clock-in is a single tap, not a dialog.",
+      "Don't use gradient text (background-clip: text) anywhere. Single solid colors only."
+    ]
+  }
+}

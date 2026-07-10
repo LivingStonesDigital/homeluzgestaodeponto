@@ -1,150 +1,104 @@
 "use client"
 
-import { 
-  Heart, 
-  Clock, 
-  Stethoscope, 
-  Home, 
-  Users, 
-  Pill,
-  ChevronDown
-} from "lucide-react"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { Heart, Clock, Stethoscope, Home, Users, Pill, ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const services = [
   {
     icon: Home,
     title: "Cuidador Domiciliar",
-    description: "Acompanhamento diário no conforto do lar, auxiliando em atividades básicas como higiene, alimentação e mobilidade.",
-    details: [
-      "Auxílio na higiene pessoal e banho",
-      "Preparo e administração de refeições",
-      "Acompanhamento em atividades de lazer",
-      "Estímulo à independência do idoso"
-    ]
+    description: "Acompanhamento diario no conforto do lar, auxiliando em atividades basicas como higiene, alimentacao e mobilidade.",
+    highlight: "Ideal para idosos que precisam de assistencia diaria",
   },
   {
     icon: Stethoscope,
     title: "Enfermagem Especializada",
-    description: "Cuidados de enfermagem profissional para pacientes que necessitam de atenção médica especializada.",
-    details: [
-      "Administração de medicamentos",
-      "Curativos e cuidados com feridas",
-      "Monitoramento de sinais vitais",
-      "Cuidados pós-operatórios"
-    ]
+    description: "Cuidados de enfermagem profissional para pacientes que necessitam de atencao medica especializada continua.",
+    highlight: "Enfermeiros registrados e experientes",
   },
   {
     icon: Clock,
-    title: "Plantão 24 Horas",
-    description: "Atendimento ininterrupto para garantir segurança e tranquilidade para toda a família.",
-    details: [
-      "Cuidadores em turnos rotativos",
-      "Supervisão constante",
-      "Atendimento de emergência",
-      "Relatórios diários de acompanhamento"
-    ]
+    title: "Plantao 24 Horas",
+    description: "Atendimento ininterrupto para garantir seguranca e tranquilidade para toda a familia em qualquer horario.",
+    highlight: "Disponibilidade total, todos os dias",
   },
   {
     icon: Heart,
     title: "Cuidados Paliativos",
-    description: "Suporte compassivo e digno para pacientes em tratamento de doenças graves.",
-    details: [
-      "Controle de dor e sintomas",
-      "Apoio emocional e espiritual",
-      "Suporte à família",
-      "Cuidados de conforto"
-    ]
+    description: "Suporte compassivo e digno para pacientes em tratamento de doencas graves, com foco em qualidade de vida.",
+    highlight: "Dignidade e conforto em cada etapa",
   },
   {
     icon: Users,
     title: "Acompanhamento Hospitalar",
-    description: "Presença e cuidado durante internações hospitalares, garantindo atenção personalizada.",
-    details: [
-      "Acompanhamento em consultas",
-      "Presença durante internação",
-      "Comunicação com equipe médica",
-      "Suporte emocional contínuo"
-    ]
+    description: "Presenca e cuidado durante internacoes hospitalares, garantindo atencao personalizada ao paciente.",
+    highlight: "Suporte dentro e fora do hospital",
   },
   {
     icon: Pill,
-    title: "Gestão de Medicamentos",
-    description: "Organização e controle rigoroso da medicação, evitando erros e garantindo eficácia do tratamento.",
-    details: [
-      "Organização de medicamentos",
-      "Lembretes e administração",
-      "Controle de estoque",
-      "Relatórios para familiares"
-    ]
-  }
+    title: "Gestao de Medicamentos",
+    description: "Organizacao e controle rigoroso da medicacao, evitando erros e garantindo eficacia do tratamento.",
+    highlight: "Controle profissional da medicacao",
+  },
 ]
 
 export function Services() {
   return (
-    <section id="servicos" className="py-20 lg:py-32 bg-secondary/30">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Header */}
-        <div className="max-w-2xl">
-          <p className="text-primary font-medium tracking-wide uppercase text-sm mb-4">
-            Nossos Serviços
-          </p>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-foreground">
-            Cuidado completo para cada necessidade
+    <section id="servicos" className="py-28 lg:py-36 bg-[#f8f6f0] relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-primary/30 to-transparent" />
+      <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gold-primary/3 blur-3xl" />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+        <div className="max-w-2xl animate-fade-in-up">
+          <span className="text-gold-primary font-bold text-sm tracking-[0.2em] uppercase">
+            Nossos Servicos
+          </span>
+          <h2 className="font-headline text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#000618] mt-4 leading-[1.05] tracking-tight">
+            Cuidado completo
+            <br />
+            <span className="text-gold-primary">para cada necessidade</span>
           </h2>
-          <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
-            Oferecemos uma ampla gama de serviços especializados, adaptados às 
-            necessidades individuais de cada paciente e família.
+          <p className="mt-4 text-[#000618]/60 text-lg leading-relaxed max-w-lg">
+            Oferecemos uma ampla gama de servicos especializados, adaptados as necessidades individuais de cada paciente e familia.
           </p>
         </div>
 
-        {/* Services Accordion */}
-        <div className="mt-16">
-          <Accordion type="single" collapsible className="space-y-4">
-            {services.map((service, index) => (
-              <AccordionItem 
-                key={index} 
-                value={`item-${index}`}
-                className="bg-card border border-border rounded-xl px-6 data-[state=open]:shadow-sm"
-              >
-                <AccordionTrigger className="hover:no-underline py-6">
-                  <div className="flex items-center gap-4 text-left">
-                    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <service.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-xl font-medium text-foreground">
-                        {service.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm mt-1 hidden sm:block">
-                        {service.description}
-                      </p>
-                    </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <div className="pl-16">
-                    <p className="text-muted-foreground mb-4 sm:hidden">
-                      {service.description}
-                    </p>
-                    <ul className="grid sm:grid-cols-2 gap-3">
-                      {service.details.map((detail, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-foreground">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                          {detail}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+        <div className="mt-16 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="group relative bg-white rounded-3xl p-8 border border-[#000618]/5 hover:border-gold-primary/20 transition-all duration-500 hover:shadow-2xl hover:shadow-gold-primary/5 hover:-translate-y-1 animate-fade-in-up"
+              style={{ animationDelay: `${200 + index * 100}ms` }}
+            >
+              <div className="w-14 h-14 rounded-2xl bg-gold-primary/10 flex items-center justify-center mb-6 group-hover:bg-gold-primary/20 transition-colors duration-300">
+                <service.icon className="w-6 h-6 text-gold-primary" />
+              </div>
+              <h3 className="font-headline text-xl font-bold text-[#000618]">
+                {service.title}
+              </h3>
+              <p className="mt-3 text-[#000618]/60 text-sm leading-relaxed">
+                {service.description}
+              </p>
+              <div className="mt-6 pt-6 border-t border-[#000618]/5">
+                <p className="text-xs font-medium text-gold-primary tracking-wide">
+                  {service.highlight}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center animate-fade-in-up" style={{ animationDelay: "800ms" }}>
+          <Button
+            asChild
+            className="bg-[#000618] hover:bg-[#1a237e] text-white px-10 h-14 text-base font-bold rounded-full transition-all duration-300"
+          >
+            <Link href="#contato">
+              Ver todos os servicos
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

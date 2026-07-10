@@ -6,11 +6,10 @@ import { Hero } from "@/components/hero";
 import { Services } from "@/components/services";
 import { Team } from "@/components/team";
 import { Testimonials } from "@/components/testimonials";
-import React from "react";
 
-function page() {
+function Page() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-[#000618]">
       <Header />
       <Hero />
       <Services />
@@ -23,4 +22,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
